@@ -106,16 +106,20 @@ export default function ExplorerGrid() {
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search by car or brand (e.g. Creta, Tata, SUV)…"
+          placeholder="Search cars or brands…"
           aria-label="Search cars"
-          className="w-full min-h-11 rounded-xl border border-[#161616]/12 bg-[#F5F1E8] py-2.5 pl-10 pr-10 text-sm text-[#161616] placeholder:text-[#161616]/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_8px_20px_rgba(22,22,22,0.04)] transition focus:border-[#C84C31]/40 focus:outline-none focus:ring-4 focus:ring-[#C84C31]/12"
+          enterKeyHint="search"
+          autoComplete="off"
+          autoCorrect="off"
+          spellCheck={false}
+          className="w-full min-h-11 rounded-xl border border-[#161616]/12 bg-[#F5F1E8] py-2.5 pl-10 pr-10 text-base text-[#161616] placeholder:text-[#161616]/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_8px_20px_rgba(22,22,22,0.04)] transition focus:border-[#C84C31]/40 focus:outline-none focus:ring-4 focus:ring-[#C84C31]/12 sm:text-sm [&::-webkit-search-cancel-button]:hidden"
         />
         {query && (
           <button
             type="button"
             onClick={() => setQuery("")}
             aria-label="Clear search"
-            className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-[#161616]/50 transition hover:bg-[#161616]/5 hover:text-[#161616]"
+            className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-lg text-[#161616]/50 transition hover:bg-[#161616]/5 hover:text-[#161616]"
           >
             <X className="h-4 w-4" />
           </button>

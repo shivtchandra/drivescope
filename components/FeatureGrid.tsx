@@ -25,13 +25,13 @@ function FeatureChip({ feature, onOpen }: { feature: Feature; onOpen: () => void
       onClick={onOpen}
       className={`group inline-flex max-w-full items-center gap-2 rounded-full border px-4 py-2.5 text-left transition-colors duration-200 min-h-[44px] ${
         isHighImpact
-          ? "border-[var(--accent)]/35 bg-[var(--accent)]/[0.07] text-sm font-medium hover:bg-[var(--accent)]/12"
-          : "border-[rgba(22,22,22,0.12)] bg-[#ECE7DF]/90 text-sm hover:border-[rgba(22,22,22,0.22)] hover:bg-[#ECE7DF]"
+          ? "border-[#C84C31]/40 bg-[#C84C31]/10 text-[#161616] text-sm font-medium hover:bg-[#C84C31]/15"
+          : "border-[#161616]/12 bg-[#ECE7DF] text-[#161616] text-sm hover:border-[#161616]/25 hover:bg-[#E5DFC8]"
       }`}
     >
       {hasVisual && (
         <span
-          className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]"
+          className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#C84C31]"
           aria-hidden
           title="Animated preview"
         />
@@ -44,8 +44,14 @@ function FeatureChip({ feature, onOpen }: { feature: Feature; onOpen: () => void
 export default function FeatureGrid({ features }: { features: Feature[] }) {
   const [target, setTarget] = useState<UnderstandingTarget | null>(null);
 
+  if (features.length === 0) {
+    return (
+      <p className="text-sm text-[#4b4b4b]">No feature list available for this trim yet.</p>
+    );
+  }
+
   return (
-    <div className="space-y-9">
+    <div className="space-y-7 sm:space-y-9">
       {CATEGORY_ORDER.map((cat) => {
         const inCat = features
           .filter((f) => f.category === cat)
@@ -53,7 +59,7 @@ export default function FeatureGrid({ features }: { features: Feature[] }) {
         if (inCat.length === 0) return null;
         return (
           <div key={cat}>
-            <h3 className="text-xs uppercase tracking-widest text-secondary font-mono mb-3">
+            <h3 className="text-xs uppercase tracking-widest text-[#4b4b4b] font-mono mb-3">
               {CATEGORY_LABELS[cat]}
             </h3>
             <div className="flex flex-wrap gap-2">

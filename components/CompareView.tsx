@@ -1,13 +1,15 @@
 "use client";
 
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
 import {
   Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer,
 } from "recharts";
 import { formatLakh, getBrand, getModel, getTestData, getVariantsForModel } from "@/lib/data";
 import type { Fuel } from "@/lib/types";
 import { estimate5yrCost, radarScoresWithFuel } from "@/lib/scores";
+import { pairHref } from "@/lib/compare-seo";
 import EstimatedBadge from "./EstimatedBadge";
 import CarPhoto from "./CarPhoto";
 import OwnerVoicesPanel from "./OwnerVoicesPanel";
@@ -28,7 +30,14 @@ const PALETTE = ["#E8590C", "#60A5FA", "#4ADE80"];
 const CAR_LABELS = ["Car A", "Car B", "Car C"];
 
 function buildDefaultSelections(initialIds: string[]) {
-  const initialModels = initialIds.length >= 2 ? initialIds.slice(0, 3) : ["hyundai-creta", "kia-seltos"];
+  let initialModels = ["hyundai-creta", "kia-seltos"];
+  if (initialIds.length >= 2) {
+    initialModels = initialIds.slice(0, 3);
+  } else if (initialIds.length === 1) {
+    const mainCar = initialIds[0];
+    const rival = mainCar === "hyundai-creta" ? "kia-seltos" : "hyundai-creta";
+    initialModels = [mainCar, rival];
+  }
   return initialModels.map((modelId) => {
     const m = getModel(modelId);
     const vs = m ? getVariantsForModel(m.id) : [];
@@ -88,7 +97,18 @@ function CarPicker({
   );
 }
 
-export default function CompareView({ initialIds }: { initialIds: string[] }) {
+export default function CompareView({
+  initialIds,
+  syncUrl = false,
+}: {
+  initialIds: string[];
+  /** When true, keep the browser URL on /compare/{a}-vs-{b} for the first two cars. */
+  syncUrl?: boolean;
+}) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const skipFirstSync = useRef(true);
+
   const [persisted, setPersisted] = usePersistedPageState("compare", {
     selections: buildDefaultSelections(initialIds),
     mobileResultTab: "radar",
@@ -113,6 +133,30 @@ export default function CompareView({ initialIds }: { initialIds: string[] }) {
     [setPersisted],
   );
   usePersistedScroll("compare");
+
+  // Prefer initialIds when landing on a slug page (override stale session picks once)
+  const seededRef = useRef(false);
+  useEffect(() => {
+    if (seededRef.current) return;
+    if (initialIds.length >= 1) {
+      seededRef.current = true;
+      setSelections(buildDefaultSelections(initialIds));
+    }
+  }, [initialIds, setSelections]);
+
+  useEffect(() => {
+    if (!syncUrl) return;
+    if (skipFirstSync.current) {
+      skipFirstSync.current = false;
+      return;
+    }
+    const ids = selections.map((s) => s.modelId).filter(Boolean);
+    if (ids.length < 2) return;
+    const href = pairHref(ids[0], ids[1]);
+    if (pathname !== href) {
+      router.replace(href, { scroll: false });
+    }
+  }, [selections, syncUrl, router, pathname]);
 
   const selected = useMemo(() => {
     return selections

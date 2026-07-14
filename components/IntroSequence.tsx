@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
 // Japanese Editorial theme (lib/theme.ts)
@@ -19,16 +20,48 @@ type Phase = "draw" | "fill" | "reveal";
 
 export default function IntroSequence() {
   const reduceMotion = useReducedMotion();
-  const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
+  const isSeoLanding = pathname.startsWith("/compare/") || pathname.startsWith("/cars/");
   const [active, setActive] = useState(false);
   const [phase, setPhase] = useState<Phase>("draw");
+  const [visitCount, setVisitCount] = useState<number>(1);
 
   useEffect(() => {
-    setMounted(true);
-    // Plays on every page load (no session gate); skipped only for reduced-motion.
+    if (isSeoLanding) {
+      queueMicrotask(() => setActive(false));
+      return;
+    }
+    
+    // Play only once per session to avoid running on client-side route changes
+    try {
+      const hasPlayed = sessionStorage.getItem("drivescope_intro_played");
+      if (hasPlayed === "true") {
+        setActive(false);
+        return;
+      }
+      sessionStorage.setItem("drivescope_intro_played", "true");
+    } catch (e) {
+      console.warn("sessionStorage not accessible:", e);
+    }
+
     if (reduceMotion) return;
-    setActive(true);
-  }, [reduceMotion]);
+    queueMicrotask(() => setActive(true));
+
+    try {
+      const isSessionActive = sessionStorage.getItem("drivescope_session_active");
+      const stored = localStorage.getItem("drivescope_visit_count");
+      let current = stored ? parseInt(stored, 10) : 0;
+
+      if (!isSessionActive) {
+        current += 1;
+        localStorage.setItem("drivescope_visit_count", current.toString());
+        sessionStorage.setItem("drivescope_session_active", "true");
+      }
+      queueMicrotask(() => setVisitCount(current));
+    } catch (e) {
+      console.warn("storage not available:", e);
+    }
+  }, [isSeoLanding, reduceMotion]);
 
   useEffect(() => {
     if (!active) return;
@@ -43,7 +76,7 @@ export default function IntroSequence() {
     if (!active) return;
     const toFill = setTimeout(() => setPhase("fill"), 2500);
     const toReveal = setTimeout(() => setPhase("reveal"), 5400);
-    const done = setTimeout(finish, 6600);
+    const done = setTimeout(() => setActive(false), 6600);
     return () => {
       clearTimeout(toFill);
       clearTimeout(toReveal);
@@ -51,16 +84,12 @@ export default function IntroSequence() {
     };
   }, [active]);
 
-  function finish() {
-    setActive(false);
-  }
-
   function skip() {
     setPhase("reveal");
-    setTimeout(finish, 350);
+    setTimeout(() => setActive(false), 350);
   }
 
-  if (!mounted || !active) return null;
+  if (isSeoLanding || !active) return null;
 
   const filled = phase === "fill" || phase === "reveal";
 
@@ -264,10 +293,17 @@ export default function IntroSequence() {
             >
               <circle cx={800} cy={372} r={23} fill={BONE} stroke={SCARLET} strokeWidth={3} />
               <text
-                x={800} y={381} textAnchor="middle" fill={DARK}
-                className="font-sans" style={{ fontSize: 24, fontWeight: 800 }}
+                x={800}
+                y={visitCount.toString().length <= 2 ? 381 : visitCount.toString().length === 3 ? 379 : 377}
+                textAnchor="middle"
+                fill={DARK}
+                className="font-sans"
+                style={{
+                  fontSize: visitCount.toString().length <= 2 ? 24 : visitCount.toString().length === 3 ? 18 : 13,
+                  fontWeight: 800
+                }}
               >
-                16
+                {visitCount}
               </text>
             </motion.g>
 

@@ -5,6 +5,7 @@ import "./atmosphere.css";
 import Navbar from "@/components/Navbar";
 import FirebaseAnalytics from "@/components/FirebaseAnalytics";
 import IntroSequence from "@/components/IntroSequence";
+import ChatbotWidget from "@/components/ChatbotWidget";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -105,6 +106,7 @@ export default function RootLayout({
         <IntroSequence />
         <Navbar />
         <main className="flex-1">{children}</main>
+        <ChatbotWidget />
         <footer className="border-t border-[#161616]/10 mt-auto bg-[#F5F1E8] text-[#161616]">
           <div className="mx-auto max-w-6xl px-6 py-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <p className="text-sm font-bold tracking-tight font-mono">

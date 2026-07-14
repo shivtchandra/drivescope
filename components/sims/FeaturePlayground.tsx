@@ -10,27 +10,27 @@ export default function FeaturePlayground() {
   const [activeTab, setActiveTab] = useState<PlaySubTab>("adas");
 
   return (
-    <div className="glass p-6 bg-[#ECE7DF]/35 text-[#161616] border-[#161616]/10 rounded-[32px] overflow-hidden min-h-[460px] flex flex-col" style={{ background: "rgba(236, 231, 223, 0.45)" }}>
+    <div className="glass p-4 sm:p-6 bg-[#ECE7DF]/35 text-[#161616] border-[#161616]/10 rounded-[24px] sm:rounded-[32px] overflow-hidden min-h-[320px] sm:min-h-[460px] flex flex-col" style={{ background: "rgba(236, 231, 223, 0.45)" }}>
       {/* Tab select header */}
-      <div className="flex border-b border-[#161616]/10 pb-4 mb-6 overflow-x-auto gap-4 scrollbar-hide">
-        {(["adas", "sunroof", "seats", "camera"] as const).map((tab) => {
-          const labels = {
-            adas: "ADAS Demonstrator",
-            sunroof: "Panoramic Sunroof",
-            seats: "Ventilated Seats",
-            camera: "360° Camera View",
-          };
+      <div className="flex border-b border-[#161616]/10 pb-4 mb-5 sm:mb-6 overflow-x-auto gap-2 sm:gap-4 scrollbar-none">
+        {([
+          { id: "adas" as const, short: "ADAS", long: "ADAS Demonstrator" },
+          { id: "sunroof" as const, short: "Sunroof", long: "Panoramic Sunroof" },
+          { id: "seats" as const, short: "Seats", long: "Ventilated Seats" },
+          { id: "camera" as const, short: "360° Cam", long: "360° Camera View" },
+        ]).map((tab) => {
           return (
             <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 text-xs font-mono font-bold uppercase tracking-wider rounded-lg transition-colors border ${
-                activeTab === tab
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`shrink-0 px-3.5 py-2.5 text-xs font-mono font-bold uppercase tracking-wider rounded-lg transition-colors border min-h-11 ${
+                activeTab === tab.id
                   ? "border-[#C84C31] bg-[#C84C31]/5 text-[#C84C31]"
-                  : "border-transparent text-secondary hover:text-primary"
+                  : "border-[#161616]/10 text-[#4b4b4b] hover:text-[#161616]"
               }`}
             >
-              {labels[tab]}
+              <span className="sm:hidden">{tab.short}</span>
+              <span className="hidden sm:inline">{tab.long}</span>
             </button>
           );
         })}
@@ -116,11 +116,11 @@ function AdasDemoView() {
 
   return (
     <div className="grid md:grid-cols-12 gap-6 items-start">
-      <div className="md:col-span-8 relative aspect-[22/8] bg-[#0A0710] rounded-2xl border border-white/[0.08] overflow-hidden">
+      <div className="md:col-span-8 relative aspect-[16/10] sm:aspect-[22/10] md:aspect-[22/8] min-h-[200px] bg-[#0A0710] rounded-2xl border border-white/[0.08] overflow-hidden">
         {/* Sky */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#0e0c1f] to-[#0A0710] opacity-90" />
         
-        <svg viewBox="0 0 700 200" className="absolute inset-0 w-full h-full">
+        <svg viewBox="0 0 700 200" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid meet">
           {/* Lanes */}
           <line x1="0" y1="75" x2="700" y2="75" stroke="rgba(247,247,245,0.06)" strokeWidth={1} />
           <line x1="0" y1="135" x2="700" y2="135" stroke="rgba(247,247,245,0.06)" strokeWidth={1} />
@@ -285,7 +285,7 @@ function SunroofDemoView() {
 
   return (
     <div className="grid md:grid-cols-12 gap-6 items-start">
-      <div className="md:col-span-8 relative aspect-[22/8] bg-[#0A0710] rounded-2xl border border-white/[0.08] overflow-hidden">
+      <div className="md:col-span-8 relative aspect-[16/10] sm:aspect-[22/10] md:aspect-[22/8] min-h-[200px] bg-[#0A0710] rounded-2xl border border-white/[0.08] overflow-hidden">
         {/* Sky / Ambient background */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#0d0c24] to-[#0A0710] opacity-90" />
         
@@ -447,7 +447,7 @@ function SeatsDemoView() {
 
   return (
     <div className="grid md:grid-cols-12 gap-6 items-start">
-      <div className="md:col-span-8 relative aspect-[22/8] bg-[#0A0710] rounded-2xl border border-white/[0.08] overflow-hidden">
+      <div className="md:col-span-8 relative aspect-[16/10] sm:aspect-[22/10] md:aspect-[22/8] min-h-[200px] bg-[#0A0710] rounded-2xl border border-white/[0.08] overflow-hidden">
         {/* Sky / Heat grid */}
         <div className={`absolute inset-0 bg-gradient-to-b ${active ? "from-[#081615] to-[#0A0710]" : "from-[#1a080c] to-[#0A0710]"} transition-colors duration-700`} />
         
@@ -576,7 +576,7 @@ function Camera360DemoView() {
 
   return (
     <div className="grid md:grid-cols-12 gap-6 items-start">
-      <div className="md:col-span-8 relative aspect-[22/8] bg-[#0A0710] rounded-2xl border border-white/[0.08] overflow-hidden">
+      <div className="md:col-span-8 relative aspect-[16/10] sm:aspect-[22/10] md:aspect-[22/8] min-h-[200px] bg-[#0A0710] rounded-2xl border border-white/[0.08] overflow-hidden">
         {/* Ambient Dark Viewport Background */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#0C0A10] to-[#050408] opacity-95" />
         
@@ -752,7 +752,7 @@ function Camera360DemoView() {
         </svg>
 
         {/* HUD */}
-        <div className="absolute top-3 left-4 bg-black/60 px-3 py-1.5 rounded-lg border border-white/[0.08] text-[9.5px] font-mono text-secondary uppercase">
+        <div className="absolute top-3 left-4 bg-black/60 px-3 py-1.5 rounded-lg border border-white/[0.08] text-[9.5px] font-mono text-[#F5F1E8]/80 uppercase">
           VIEW MODE: {cameraView === "standard" ? "180° REAR FEED ONLY" : "360° STITCHED SURROUND FEED"}
         </div>
       </div>

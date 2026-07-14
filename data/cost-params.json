@@ -1,11 +1,11 @@
 {
-  "_note": "All values are estimates for the ownership cost model. Tune freely — every output using these is labeled 'estimated' in the UI.",
+  "_note": "All values are estimates for the ownership cost model. Fuel prices: retail India rates ~April 2026 (Delhi/Mumbai/metros). Outputs using these are labeled 'estimated' in the UI.",
   "cities": [
     {
       "id": "delhi",
       "name": "Delhi",
-      "petrolPrice": 96.7,
-      "dieselPrice": 87.6,
+      "petrolPrice": 94.77,
+      "dieselPrice": 87.67,
       "cngPrice": 77.4,
       "evPrice": 7,
       "insuranceMultiplier": 1
@@ -13,8 +13,8 @@
     {
       "id": "mumbai",
       "name": "Mumbai",
-      "petrolPrice": 104.2,
-      "dieselPrice": 92.1,
+      "petrolPrice": 103.54,
+      "dieselPrice": 90.03,
       "cngPrice": 87.5,
       "evPrice": 8.2,
       "insuranceMultiplier": 1.1
@@ -22,8 +22,8 @@
     {
       "id": "bangalore",
       "name": "Bengaluru",
-      "petrolPrice": 102.8,
-      "dieselPrice": 88.9,
+      "petrolPrice": 102.99,
+      "dieselPrice": 91.06,
       "cngPrice": 83.5,
       "evPrice": 8,
       "insuranceMultiplier": 1.05
@@ -31,8 +31,8 @@
     {
       "id": "hyderabad",
       "name": "Hyderabad",
-      "petrolPrice": 107.4,
-      "dieselPrice": 95.6,
+      "petrolPrice": 107.46,
+      "dieselPrice": 95.7,
       "cngPrice": 89.2,
       "evPrice": 8.5,
       "insuranceMultiplier": 1
@@ -40,8 +40,8 @@
     {
       "id": "chennai",
       "name": "Chennai",
-      "petrolPrice": 102.6,
-      "dieselPrice": 93.8,
+      "petrolPrice": 100.8,
+      "dieselPrice": 92.39,
       "cngPrice": 84.5,
       "evPrice": 8,
       "insuranceMultiplier": 1
@@ -49,8 +49,8 @@
     {
       "id": "kolkata",
       "name": "Kolkata",
-      "petrolPrice": 105,
-      "dieselPrice": 91.8,
+      "petrolPrice": 105.41,
+      "dieselPrice": 92.02,
       "cngPrice": 85,
       "evPrice": 7.5,
       "insuranceMultiplier": 0.95
@@ -58,8 +58,8 @@
     {
       "id": "pune",
       "name": "Pune",
-      "petrolPrice": 104,
-      "dieselPrice": 90.4,
+      "petrolPrice": 104.47,
+      "dieselPrice": 91.15,
       "cngPrice": 86.8,
       "evPrice": 8,
       "insuranceMultiplier": 1.05
@@ -67,8 +67,8 @@
     {
       "id": "ahmedabad",
       "name": "Ahmedabad",
-      "petrolPrice": 94.5,
-      "dieselPrice": 90.2,
+      "petrolPrice": 94.49,
+      "dieselPrice": 90.16,
       "cngPrice": 81,
       "evPrice": 7,
       "insuranceMultiplier": 0.95

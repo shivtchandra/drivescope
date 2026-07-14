@@ -3,15 +3,7 @@
 import React, { useState, useMemo } from "react";
 import { Zap } from "lucide-react";
 import DriveSelect from "@/components/ui/DriveSelect";
-
-const CITIES = [
-  { id: "mumbai", name: "Mumbai", petrol: 104.2, diesel: 92.1, cng: 87.5, ev: 8.2 },
-  { id: "delhi", name: "Delhi", petrol: 96.7, diesel: 87.6, cng: 77.4, ev: 7.0 },
-  { id: "bangalore", name: "Bangalore", petrol: 102.8, diesel: 88.9, cng: 83.5, ev: 8.0 },
-  { id: "hyderabad", name: "Hyderabad", petrol: 107.4, diesel: 95.6, cng: 89.2, ev: 8.5 },
-  { id: "pune", name: "Pune", petrol: 104.0, diesel: 90.4, cng: 86.8, ev: 8.0 },
-  { id: "chennai", name: "Chennai", petrol: 102.6, diesel: 93.8, cng: 84.5, ev: 8.0 },
-];
+import { costParams, formatCityFuelLabel } from "@/lib/data";
 
 export default function InteractiveSimulator() {
   // Inputs
@@ -30,7 +22,7 @@ export default function InteractiveSimulator() {
 
   // Dynamic calculations
   const results = useMemo(() => {
-    const selectedCity = CITIES.find((c) => c.id === cityId) || CITIES[3];
+    const selectedCity = costParams.cities.find((c) => c.id === cityId) || costParams.cities[0];
     
     // 1. EMI Calculation (8.5% annual interest)
     const principal = Math.max(0, budget - sanitizedDownPayment);
@@ -47,16 +39,16 @@ export default function InteractiveSimulator() {
     const interestPaid = Math.max(0, totalLoanCost - principal);
 
     // 2. Fuel Cost (5 years)
-    let fuelPrice = selectedCity.petrol;
+    let fuelPrice = selectedCity.petrolPrice;
     let fe = 13.5; // Petrol base
     if (fuelType === "diesel") {
-      fuelPrice = selectedCity.diesel;
+      fuelPrice = selectedCity.dieselPrice;
       fe = 16.0;
     } else if (fuelType === "cng") {
-      fuelPrice = selectedCity.cng;
+      fuelPrice = selectedCity.cngPrice;
       fe = 18.5;
     } else if (fuelType === "ev") {
-      fuelPrice = selectedCity.ev;
+      fuelPrice = selectedCity.evPrice;
       fe = 6.2; // km per kWh
     }
 
@@ -180,7 +172,7 @@ export default function InteractiveSimulator() {
                   value={cityId}
                   onChange={setCityId}
                   ariaLabel="Select City"
-                  options={CITIES.map((c) => ({ value: c.id, label: c.name }))}
+                  options={costParams.cities.map((c) => ({ value: c.id, label: formatCityFuelLabel(c) }))}
                   className="w-full"
                 />
               </label>

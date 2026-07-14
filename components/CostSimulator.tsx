@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,
 } from "recharts";
-import { costParams, formatLakh, getModel, getVariant } from "@/lib/data";
+import { costParams, formatLakh, getModel, getVariant, formatCityFuelLabel } from "@/lib/data";
 import { computeCost, type CostResult } from "@/lib/cost";
 import EstimatedBadge from "./EstimatedBadge";
 import VariantSelect from "./sims/VariantSelect";
@@ -210,10 +210,14 @@ export default function CostSimulator({ initialVariants = [] }: { initialVariant
           ariaLabel="City"
           options={costParams.cities.map((c) => ({
             value: c.id,
-            label: `${c.name} · ₹${c.petrolPrice.toFixed(0)}/l`,
+            label: formatCityFuelLabel(c),
           }))}
           className="w-full"
         />
+        <p className="mt-1.5 text-[10px] text-[#4b4b4b]">
+          Petrol ₹{city.petrolPrice.toFixed(2)}/l · Diesel ₹{city.dieselPrice.toFixed(2)}/l
+          <span className="text-[#161616]/40"> · retail rates ~Apr 2026</span>
+        </p>
       </label>
       <label className="block text-sm">
         <span className="text-secondary text-xs">

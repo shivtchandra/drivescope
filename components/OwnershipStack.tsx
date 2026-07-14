@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { costParams, formatLakh, getModel, getVariant } from "@/lib/data";
+import { costParams, formatLakh, getModel, getVariant, formatCityFuelLabel } from "@/lib/data";
 import { computeCost } from "@/lib/cost";
 import EstimatedBadge from "./EstimatedBadge";
 import VariantSelect from "./sims/VariantSelect";
@@ -368,7 +368,7 @@ export default function OwnershipStack() {
               ariaLabel="City Location"
               options={costParams.cities.map((c) => ({
                 value: c.id,
-                label: `${c.name} · ₹${c.petrolPrice.toFixed(0)}/l`
+                label: formatCityFuelLabel(c),
               }))}
               className="w-full"
             />

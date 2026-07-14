@@ -362,3 +362,13 @@ select option {
   color: #161616;
   background: #F5F1E8;
 }
+
+/* Force visible typing color for all text-based inputs across the site */
+input[type="text"],
+input[type="search"],
+input[type="number"],
+input[type="email"],
+input:not([type]),
+textarea {
+  color: #161616 !important;
+}

@@ -34,10 +34,10 @@ export default function CarDetailPageLayout({
   }, []);
 
   const tabs = [
-    { key: "trims" as TabKey, label: "Trims & Upgrades" },
-    { key: "features" as TabKey, label: "Specs & Tech" },
-    { key: "simulations" as TabKey, label: "Simulations" },
-    { key: "cost" as TabKey, label: "Ownership Cost" },
+    { key: "trims" as TabKey, label: "Trims" },
+    { key: "features" as TabKey, label: "Features" },
+    { key: "simulations" as TabKey, label: "Sims" },
+    { key: "cost" as TabKey, label: "Cost" },
   ];
 
   if (!isMobile) {

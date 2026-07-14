@@ -9,7 +9,7 @@
       "min": 4687900,
       "max": 5582900
     },
-    "heroImage": "/images/cars/audi-a4.jpg",
+    "heroImage": "https://emea-dam.audi.com/adobe/assets/urn:aaid:aem:542793c6-1026-40d1-8afe-a7dbf248e87d/as/A4WebBnner1920x1080.jpg?width=1920",
     "aiSummary": "The Audi A4 is a luxury sedan sold in India with petrol powertrain options. Variant spread includes Premium,  Premium Plus,  Technology and more.",
     "ncap": {
       "agency": null,
@@ -47,7 +47,7 @@
       "min": 6480900,
       "max": 7165900
     },
-    "heroImage": "/images/cars/audi-a6.jpg",
+    "heroImage": "https://emea-dam.audi.com/adobe/assets/urn:aaid:aem:687ed459-e642-40c9-8423-8ece16d87b16/as/1920x1920-audi-a6-sedan-stage-2021-AA6_L_181005_1.jpg?width=1920",
     "aiSummary": "The Audi A6 is a luxury sedan sold in India with petrol powertrain options. Variant spread includes Premium Plus,  Technology and more.",
     "ncap": {
       "agency": null,
@@ -161,7 +161,7 @@
       "min": 5354900,
       "max": 5354900
     },
-    "heroImage": "/images/cars/audi-q3-sportback.jpg",
+    "heroImage": "https://emea-dam.audi.com/adobe/assets/urn:aaid:aem:32425ab8-1884-47c3-bf6f-c16b782ca8c1/as/1920x1080-aq3_191008_v3.jpg?width=1920",
     "aiSummary": "The Audi Q3 Sportback is a luxury suv coupe sold in India with petrol powertrain options. Variant spread includes Technology and more.",
     "ncap": {
       "agency": null,
@@ -237,7 +237,7 @@
       "min": 8716900,
       "max": 9614900
     },
-    "heroImage": "/images/cars/audi-q7.jpg",
+    "heroImage": "https://emea-dam.audi.com/adobe/assets/urn:aaid:aem:730955d7-e28a-4fa8-93e5-d03fd5c6c865/as/AudiQ7Launch1920x1080.jpg?width=1920",
     "aiSummary": "The Audi Q7 is a luxury suv sold in India with petrol powertrain options. Variant spread includes Premium Plus,  Technology and more.",
     "ncap": {
       "agency": null,
@@ -275,7 +275,7 @@
       "min": 11299900,
       "max": 11499900
     },
-    "heroImage": "/images/cars/audi-q8.jpg",
+    "heroImage": "https://emea-dam.audi.com/adobe/assets/urn:aaid:aem:85c63342-0fc8-4099-bec0-ae9b4e6474b7/as/Q8_2023_5476-new-crop-L.jpg?width=1920",
     "aiSummary": "The Audi Q8 is a luxury suv coupe sold in India with petrol powertrain options. Variant spread includes Celebration,  Standard and more.",
     "ncap": {
       "agency": null,
@@ -351,7 +351,7 @@
       "min": 23399900,
       "max": 23799900
     },
-    "heroImage": "/images/cars/audi-rs-q8.jpg",
+    "heroImage": "https://emea-dam.audi.com/adobe/assets/urn:aaid:aem:094291ba-1168-4391-ba25-818d852e8843/as/RSQ8p_2024_6667-L.jpg?width=1920",
     "aiSummary": "The Audi RS Q8 is a performance suv sold in India with petrol powertrain options. Variant spread includes Standard,  Performance and more.",
     "ncap": {
       "agency": null,
@@ -1757,7 +1757,7 @@
       "min": 1889900,
       "max": 2689900
     },
-    "heroImage": "/images/cars/mahindra-be-6.jpg",
+    "heroImage": "https://www.mahindraelectricsuv.com/on/demandware.static/-/Sites-esuv-product-catalog/default/dw56364db8/images/BE6/m_hires_gallery/Firestrom%20Orange/1.jpg",
     "aiSummary": "The Mahindra BE 6 is a electric suv coupe sold in India with electric powertrain options. Variant spread includes Pack One,  Pack Two,  Pack Three and more.",
     "ncap": {
       "agency": null,

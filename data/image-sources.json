@@ -505,9 +505,9 @@
     {
       "modelId": "mahindra-be-6",
       "query": "Mahindra BE 6 India",
-      "fetchedFrom": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Mahindra_Goa_5door_in_Avellino.JPG/1280px-Mahindra_Goa_5door_in_Avellino.JPG",
-      "credit": "Corvettec6r",
-      "license": "CC0"
+      "fetchedFrom": "https://www.mahindraelectricsuv.com/on/demandware.static/-/Sites-esuv-product-catalog/default/dw56364db8/images/BE6/m_hires_gallery/Firestrom%20Orange/1.jpg",
+      "credit": "Mahindra Electric",
+      "license": "Official"
     },
     {
       "modelId": "mahindra-be-6-fe",
@@ -743,31 +743,37 @@
     {
       "modelId": "audi-a4",
       "query": "Audi A4 India",
-      "fetchedFrom": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Audi_Showroom%283%29.JPG/1280px-Audi_Showroom%283%29.JPG",
-      "credit": "Yash Y. Vadiwala",
-      "license": "CC BY-SA 3.0"
+      "fetchedFrom": "https://emea-dam.audi.com/adobe/assets/urn:aaid:aem:542793c6-1026-40d1-8afe-a7dbf248e87d/as/A4WebBnner1920x1080.jpg?width=1920",
+      "credit": "Audi EMEA DAM",
+      "license": "Official"
     },
     {
       "modelId": "audi-a6",
       "query": "Audi A6 India",
-      "fetchedFrom": "https://upload.wikimedia.org/wikipedia/commons/6/6b/At_the_Audi_Quattro_Golf_Tournament.jpg",
-      "credit": "V Malik",
-      "license": "CC BY-SA 2.0"
+      "fetchedFrom": "https://emea-dam.audi.com/adobe/assets/urn:aaid:aem:687ed459-e642-40c9-8423-8ece16d87b16/as/1920x1920-audi-a6-sedan-stage-2021-AA6_L_181005_1.jpg?width=1920",
+      "credit": "Audi EMEA DAM",
+      "license": "Official"
     },
     {
       "modelId": "audi-q3-sportback",
-      "query": "Audi Q3 Sportback India"
+      "query": "Audi Q3 Sportback India",
+      "fetchedFrom": "https://emea-dam.audi.com/adobe/assets/urn:aaid:aem:32425ab8-1884-47c3-bf6f-c16b782ca8c1/as/1920x1080-aq3_191008_v3.jpg?width=1920",
+      "credit": "Audi EMEA DAM",
+      "license": "Official"
     },
     {
       "modelId": "audi-q7",
       "query": "Audi Q7 India",
-      "fetchedFrom": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Audi_Showroom%283%29.JPG/1280px-Audi_Showroom%283%29.JPG",
-      "credit": "Yash Y. Vadiwala",
-      "license": "CC BY-SA 3.0"
+      "fetchedFrom": "https://emea-dam.audi.com/adobe/assets/urn:aaid:aem:730955d7-e28a-4fa8-93e5-d03fd5c6c865/as/AudiQ7Launch1920x1080.jpg?width=1920",
+      "credit": "Audi EMEA DAM",
+      "license": "Official"
     },
     {
       "modelId": "audi-q8",
-      "query": "Audi Q8 India"
+      "query": "Audi Q8 India",
+      "fetchedFrom": "https://emea-dam.audi.com/adobe/assets/urn:aaid:aem:85c63342-0fc8-4099-bec0-ae9b4e6474b7/as/Q8_2023_5476-new-crop-L.jpg?width=1920",
+      "credit": "Audi EMEA DAM",
+      "license": "Official"
     },
     {
       "modelId": "audi-s5-sportback",
@@ -776,9 +782,9 @@
     {
       "modelId": "audi-rs-q8",
       "query": "Audi RS Q8 India",
-      "fetchedFrom": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Felicidade_A_very_happy_boy.jpg/1280px-Felicidade_A_very_happy_boy.jpg",
-      "credit": "Luis Miguel Bugallo Sánchez (Lmbuga Commons)(Lmbuga Galipedia)",
-      "license": "CC BY-SA 4.0"
+      "fetchedFrom": "https://emea-dam.audi.com/adobe/assets/urn:aaid:aem:094291ba-1168-4391-ba25-818d852e8843/as/RSQ8p_2024_6667-L.jpg?width=1920",
+      "credit": "Audi EMEA DAM",
+      "license": "Official"
     },
     {
       "modelId": "audi-e-tron-gt",

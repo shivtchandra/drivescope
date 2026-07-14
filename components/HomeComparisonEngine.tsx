@@ -6,11 +6,13 @@ import {
 } from "recharts";
 import { models, getBrand, getVariantsForModel, getTestData, features } from "@/lib/data";
 import { radarScores } from "@/lib/scores";
+import { pairHref } from "@/lib/compare-seo";
 import EstimatedBadge from "./EstimatedBadge";
 import CarPhoto from "./CarPhoto";
 import DriveSelect from "@/components/ui/DriveSelect";
 import { theme } from "@/lib/theme";
 import { usePersistedPageState, usePersistedScroll } from "@/lib/use-persisted-page-state";
+import Link from "next/link";
 
 const AXES = [
   { key: "performance", label: "Performance" },
@@ -169,6 +171,20 @@ export default function HomeComparisonEngine() {
         </div>
         <span className="font-geist text-[10px] tracking-widest text-[var(--accent)] uppercase">Control Center</span>
       </div>
+
+      {ids.length >= 2 && models.some((m) => m.id === ids[0]) && models.some((m) => m.id === ids[1]) && (
+        <div className="flex flex-wrap items-center gap-3">
+          <Link
+            href={pairHref(ids[0], ids[1])}
+            className="inline-flex items-center gap-2 rounded-xl border border-[#C84C31]/35 bg-[#C84C31]/10 px-4 py-2.5 text-sm font-semibold text-[#C84C31] hover:bg-[#C84C31]/15 transition"
+          >
+            Open full head-to-head →
+          </Link>
+          <span className="text-xs text-[#4b4b4b]">
+            SEO page with scored axes, ownership cost & FAQs
+          </span>
+        </div>
+      )}
 
       {/* Single 6-axis radar — same axes as /compare */}
       <div className="border border-[#161616]/10 bg-[#ECE7DF] p-5 sm:p-6 rounded-2xl">

@@ -5,10 +5,10 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Explore Cars",
-  description: "Browse 25+ cars across multiple segments. Filter by budget, fuel type, transmission, and brand to find the perfect car for your needs.",
+  description: "Browse 130+ cars across India. Filter by budget, fuel type, transmission, and brand — then compare ownership cost and scored specs.",
   openGraph: {
     title: "Explore Cars — DriveScope",
-    description: "Browse 25+ cars across multiple segments. Filter by budget, fuel type, transmission, and brand to find the perfect car for your needs.",
+    description: "Browse 130+ cars across India. Filter by budget, fuel type, transmission, and brand.",
   }
 };
 
@@ -17,7 +17,7 @@ export default function ExplorePage() {
     <div>
       <CompactPageHeader
         title="Explore"
-        description="25 cars across four segments, petrol and diesel. Filter by brand, budget, gearbox and fuel."
+        description="130+ cars across hatch, sedan, and SUV segments. Filter by brand, budget, gearbox and fuel — or search by name."
         className="pb-6 sm:pb-10"
       />
       <div className="mx-auto max-w-6xl px-4 sm:px-6 pb-24">

@@ -20,6 +20,7 @@ import UnderstandingLayersGuide from "@/components/understanding/UnderstandingLa
 import EstimatedBadge from "@/components/EstimatedBadge";
 import OwnerVoicesPanel from "@/components/OwnerVoicesPanel";
 import CarDetailPageLayout from "@/components/CarDetailPageLayout";
+import CompareRivals from "@/components/CompareRivals";
 
 export function generateStaticParams() {
   return models.map((m) => ({ modelId: m.id }));
@@ -31,8 +32,8 @@ export async function generateMetadata({ params }: { params: Promise<{ modelId: 
   if (!m) return { title: "DriveScope" };
   const brand = getBrand(m.brandId);
   
-  const title = `${brand?.name} ${m.name} Price, Specs & True Cost`;
-  const description = `${m.aiSummary} See real-world mileage, ownership costs, and detailed comparisons for the ${brand?.name} ${m.name}.`;
+  const title = `${brand?.name} ${m.name} Price, Specs, Mileage & 5-Year Cost (India)`;
+  const description = `${m.aiSummary} See real-world mileage, ownership costs, and head-to-head comparisons for the ${brand?.name} ${m.name}.`;
 
   return { 
     title,
@@ -166,6 +167,8 @@ export default async function CarPage({ params }: { params: Promise<{ modelId: s
               </a>
             ))}
           </nav>
+
+          <CompareRivals modelId={model.id} />
         </section>
       }
       ownerVoicesSection={
@@ -185,19 +188,20 @@ export default async function CarPage({ params }: { params: Promise<{ modelId: s
         </section>
       }
       understandSection={
-        <section id="understand" className="mx-auto max-w-6xl px-6 py-16 scroll-mt-28">
-          <h2 className="text-3xl font-semibold tracking-tight mb-2">Explain This Like I&apos;m Buying It</h2>
-          <p className="text-secondary mb-6 max-w-xl text-sm">
+        <section id="understand" className="mx-auto max-w-6xl px-4 sm:px-6 py-10 sm:py-16 scroll-mt-28">
+          <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight mb-2">Explain This Like I&apos;m Buying It</h2>
+          <p className="text-[#4b4b4b] mb-6 max-w-xl text-sm">
             Every feature translated — what it is, when you&apos;ll use it, whether it&apos;s worth paying for.
           </p>
-          <UnderstandingLayersGuide />
-          <SpecUnderstandingGrid model={model} />
-          <div id="features" className="scroll-mt-28 mt-10">
-            <h3 className="text-lg font-medium mb-4">
-              Top trim features <span className="text-secondary text-sm font-normal">({top.name})</span>
+          {/* Features first on mobile so Specs & Tech tab isn't empty above the fold */}
+          <div id="features" className="scroll-mt-28 mb-10">
+            <h3 className="text-lg font-medium mb-4 text-[#161616]">
+              Top trim features <span className="text-[#4b4b4b] text-sm font-normal">({top.name})</span>
             </h3>
             <FeatureGrid features={featuresHere} />
           </div>
+          <UnderstandingLayersGuide />
+          <SpecUnderstandingGrid model={model} />
         </section>
       }
       simulationsSection={

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { costParams, formatLakh, getModel, getVariant, models, variants } from "@/lib/data";
+import { costParams, formatLakh, getModel, getVariant, models, variants, formatCityFuelLabel } from "@/lib/data";
 import { dieselPairsForModel, fuelDecision } from "@/lib/cost";
 import EstimatedBadge from "./EstimatedBadge";
 import DriveSelect from "@/components/ui/DriveSelect";
@@ -67,7 +67,7 @@ export default function FuelDecisionCard({ initialModelId }: { initialModelId?: 
             value={cityId}
             onChange={setCityId}
             ariaLabel="City"
-            options={costParams.cities.map((c) => ({ value: c.id, label: c.name }))}
+            options={costParams.cities.map((c) => ({ value: c.id, label: formatCityFuelLabel(c) }))}
             className="w-full"
           />
         </label>

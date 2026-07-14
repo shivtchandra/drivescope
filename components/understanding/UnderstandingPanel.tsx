@@ -77,18 +77,18 @@ export default function UnderstandingPanel({
     <AnimatePresence>
       {target && content && (
         <motion.div
-          className="fixed inset-0 z-[60] flex sm:justify-end bg-black/70 backdrop-blur-sm"
+          className="fixed inset-0 z-[60] flex items-end sm:items-stretch sm:justify-end bg-black/55 sm:bg-black/70 backdrop-blur-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
         >
           <motion.div
-            className="w-full sm:max-w-lg h-full sm:h-auto sm:max-h-[100dvh] overflow-y-auto glass border-l border-white/[0.08] p-6 sm:p-8"
-            initial={{ x: "100%", opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: "100%", opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="w-full sm:max-w-lg max-h-[92dvh] sm:max-h-[100dvh] sm:h-full overflow-y-auto rounded-t-2xl sm:rounded-none bg-[#F5F1E8] border border-[#161616]/10 border-b-0 sm:border-l sm:border-y-0 sm:border-r-0 p-5 sm:p-8 shadow-[0_-12px_40px_rgba(22,22,22,0.18)]"
+            initial={{ opacity: 0, y: 48 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 48 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start justify-between gap-4 mb-4">

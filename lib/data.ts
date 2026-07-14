@@ -102,3 +102,8 @@ export function getDriveCoverage(variantId: string): DriveCoverage {
 export function formatLakh(inr: number): string {
   return `₹${(inr / 100000).toFixed(2)}L`;
 }
+
+/** City picker label: "Bengaluru · P ₹103 · D ₹91" */
+export function formatCityFuelLabel(city: { name: string; petrolPrice: number; dieselPrice: number }): string {
+  return `${city.name} · P ₹${city.petrolPrice.toFixed(0)} · D ₹${city.dieselPrice.toFixed(0)}`;
+}
