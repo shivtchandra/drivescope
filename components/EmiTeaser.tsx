@@ -2,8 +2,9 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import DriveRange from "@/components/ui/DriveRange";
 
-const RATE = 0.085; // 8.5% p.a. — standard Indian car loan rate
+const RATE = 0.085;
 
 function calcEmi(principal: number, years: number): number {
   const r = RATE / 12;
@@ -17,9 +18,9 @@ function formatLakh(v: number) {
 }
 
 export default function EmiTeaser() {
-  const [budget, setBudget] = useState(1500000); // 15L
-  const [down, setDown] = useState(20); // 20%
-  const [tenure, setTenure] = useState(5); // years
+  const [budget, setBudget] = useState(1500000);
+  const [down, setDown] = useState(20);
+  const [tenure, setTenure] = useState(5);
 
   const principal = useMemo(() => budget * (1 - down / 100), [budget, down]);
   const emi = useMemo(() => calcEmi(principal, tenure), [principal, tenure]);
@@ -27,58 +28,46 @@ export default function EmiTeaser() {
 
   return (
     <div className="grid lg:grid-cols-2 gap-12 items-start">
-      {/* Inputs */}
       <div className="space-y-7">
-        <div>
-          <div className="flex justify-between text-sm mb-2">
-            <span className="text-secondary">Budget</span>
-            <span className="font-medium stat-num">{formatLakh(budget)}</span>
-          </div>
-          <input
-            type="range" min={500000} max={5000000} step={50000}
-            value={budget}
-            onChange={(e) => setBudget(Number(e.target.value))}
-            className="w-full accent-blue-500"
-          />
-          <div className="flex justify-between text-xs text-secondary mt-1">
-            <span>₹5L</span><span>₹50L</span>
-          </div>
-        </div>
-
-        <div>
-          <div className="flex justify-between text-sm mb-2">
-            <span className="text-secondary">Down Payment</span>
-            <span className="font-medium stat-num">{down}% · {formatLakh(budget * down / 100)}</span>
-          </div>
-          <input
-            type="range" min={10} max={50} step={5}
-            value={down}
-            onChange={(e) => setDown(Number(e.target.value))}
-            className="w-full accent-blue-500"
-          />
-          <div className="flex justify-between text-xs text-secondary mt-1">
-            <span>10%</span><span>50%</span>
-          </div>
-        </div>
-
-        <div>
-          <div className="flex justify-between text-sm mb-2">
-            <span className="text-secondary">Loan Tenure</span>
-            <span className="font-medium stat-num">{tenure} years</span>
-          </div>
-          <input
-            type="range" min={1} max={7} step={1}
-            value={tenure}
-            onChange={(e) => setTenure(Number(e.target.value))}
-            className="w-full accent-blue-500"
-          />
-          <div className="flex justify-between text-xs text-secondary mt-1">
-            <span>1 yr</span><span>7 yrs</span>
-          </div>
-        </div>
+        <DriveRange
+          label="Budget"
+          value={budget}
+          onChange={setBudget}
+          min={500000}
+          max={5000000}
+          step={50000}
+          mobileStep={100000}
+          format={formatLakh}
+          presets={[1000000, 1500000, 2500000]}
+          presetFormat={formatLakh}
+          accentClass="accent-[var(--accent)]"
+        />
+        <DriveRange
+          label="Down Payment"
+          value={down}
+          onChange={setDown}
+          min={10}
+          max={50}
+          step={5}
+          format={(v) => `${v}% · ${formatLakh(budget * v / 100)}`}
+          presets={[10, 20, 30]}
+          presetFormat={(v) => `${v}%`}
+          accentClass="accent-[var(--accent)]"
+        />
+        <DriveRange
+          label="Loan Tenure"
+          value={tenure}
+          onChange={setTenure}
+          min={1}
+          max={7}
+          step={1}
+          format={(v) => `${v} years`}
+          presets={[3, 5, 7]}
+          presetFormat={(v) => `${v} yr`}
+          accentClass="accent-[var(--accent)]"
+        />
       </div>
 
-      {/* Output */}
       <div className="space-y-4">
         <div className="glass p-6">
           <p className="text-xs text-secondary mb-1">Monthly EMI</p>
@@ -107,10 +96,7 @@ export default function EmiTeaser() {
           </div>
         </div>
 
-        <Link
-          href={`/cost`}
-          className="btn-accent block text-center text-sm"
-        >
+        <Link href={`/cost`} className="btn-accent block text-center text-sm">
           Full 5-year cost simulation →
         </Link>
       </div>

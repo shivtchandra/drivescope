@@ -7,6 +7,7 @@ import { cornerSpeedCapKmh } from "@/lib/race/grip";
 import { CAR_IMAGE_MAP } from "@/lib/carImageMap";
 import { SCENE_COLORS } from "@/components/understanding/scenes/shared/sceneTokens";
 import VariantSelect from "./VariantSelect";
+import DriveRange from "@/components/ui/DriveRange";
 
 type Surface = "dry" | "wet" | "mud";
 
@@ -195,21 +196,19 @@ export default function CorneringLab({ initialVariant }: { initialVariant?: stri
           </div>
         </div>
 
-        <label className="block text-sm">
-          <span className="text-secondary text-xs flex justify-between mb-1">
-            <span>Entry speed</span>
-            <span className="text-primary font-mono">{entrySpeed} km/h</span>
-          </span>
-          <input
-            type="range"
-            min={20}
-            max={140}
-            step={5}
-            value={entrySpeed}
-            onChange={(e) => { setState("idle"); setEntrySpeed(Number(e.target.value)); }}
-            className="w-full accent-[#C84C31]"
-          />
-        </label>
+        <DriveRange
+          label="Entry speed"
+          value={entrySpeed}
+          onChange={(v) => { setState("idle"); setEntrySpeed(v); }}
+          min={20}
+          max={140}
+          step={5}
+          mobileStep={10}
+          format={(v) => `${v} km/h`}
+          presets={[40, 80, 120]}
+          presetFormat={(v) => `${v}`}
+          accentClass="accent-[#C84C31]"
+        />
       </div>
 
       {/* ── Viewport ── */}

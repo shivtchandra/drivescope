@@ -16,6 +16,7 @@ import {
 } from "@/lib/sim";
 import EstimatedBadge from "@/components/EstimatedBadge";
 import VariantSelect from "@/components/sims/VariantSelect";
+import DriveRange from "@/components/ui/DriveRange";
 import Stage from "../Stage";
 import StylizedCar, { type CarMotionRef } from "../StylizedCar";
 import { LANE_W, Road } from "./Road";
@@ -215,16 +216,18 @@ export default function Braking3D({
           }
         }} />
         <VariantSelect label="Compare against (optional)" value={idB} allowNone onChange={(x) => { setIdB(x); setDone(false); }} />
-        <label className="block text-sm">
-          <span className="text-secondary text-xs">
-            Speed: <span className="stat-num text-primary">{speed} km/h</span>
-          </span>
-          <input
-            type="range" min={60} max={100} step={20} value={speed}
-            onChange={(e) => { setSpeed(Number(e.target.value)); setDone(false); }}
-            className="w-full mt-3 accent-[#E8590C]"
-          />
-        </label>
+        <DriveRange
+          label="Speed"
+          value={speed}
+          onChange={(v) => { setSpeed(v); setDone(false); }}
+          min={60}
+          max={100}
+          step={20}
+          format={(v) => `${v} km/h`}
+          presets={[60, 80, 100]}
+          presetFormat={(v) => `${v}`}
+          accentClass="accent-[#E8590C]"
+        />
       </div>
 
       <div className="relative">

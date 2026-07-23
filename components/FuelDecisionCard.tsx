@@ -5,6 +5,7 @@ import { costParams, formatLakh, getModel, getVariant, models, variants, formatC
 import { dieselPairsForModel, fuelDecision } from "@/lib/cost";
 import EstimatedBadge from "./EstimatedBadge";
 import DriveSelect from "@/components/ui/DriveSelect";
+import DriveRange from "@/components/ui/DriveRange";
 
 export default function FuelDecisionCard({ initialModelId }: { initialModelId?: string }) {
   const dieselModels = useMemo(
@@ -40,7 +41,7 @@ export default function FuelDecisionCard({ initialModelId }: { initialModelId?: 
         Same car, two fuels — how many kilometres until the diesel premium pays for itself.
       </p>
 
-      <div className="grid gap-4 sm:grid-cols-4 mb-6">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-6">
         <label className="block text-sm">
           <span className="mb-1.5 block text-secondary text-xs">Car</span>
           <DriveSelect
@@ -71,16 +72,20 @@ export default function FuelDecisionCard({ initialModelId }: { initialModelId?: 
             className="w-full"
           />
         </label>
-        <label className="block text-sm">
-          <span className="text-secondary text-xs">
-            Driving: <span className="stat-num text-primary">{(kmPerYear / 1000).toFixed(0)}k km/yr</span>
-          </span>
-          <input
-            type="range" min={5000} max={30000} step={1000} value={kmPerYear}
-            onChange={(e) => setKmPerYear(Number(e.target.value))}
-            className="w-full mt-3 accent-[#E8590C]"
+        <div className="sm:col-span-2 lg:col-span-1">
+          <DriveRange
+            label="Driving"
+            value={kmPerYear}
+            onChange={setKmPerYear}
+            min={5000}
+            max={30000}
+            step={1000}
+            format={(v) => `${(v / 1000).toFixed(0)}k km/yr`}
+            presets={[8000, 12000, 18000]}
+            presetFormat={(v) => `${v / 1000}k km/yr`}
+            accentClass="accent-[#E8590C]"
           />
-        </label>
+        </div>
       </div>
 
       {fd && pair && (

@@ -9,10 +9,10 @@ import { computeCost, type CostResult } from "@/lib/cost";
 import EstimatedBadge from "./EstimatedBadge";
 import VariantSelect from "./sims/VariantSelect";
 import DriveSelect from "@/components/ui/DriveSelect";
+import DriveRange from "@/components/ui/DriveRange";
 import { TrendingDown, Wrench, Disc } from "lucide-react";
 import MobileResultsBar from "@/components/mobile/MobileResultsBar";
 import MobileSwipePanels from "@/components/mobile/MobileSwipePanels";
-import ChipPresets from "@/components/mobile/ChipPresets";
 import { usePersistedPageState, usePersistedScroll } from "@/lib/use-persisted-page-state";
 
 const SERIES = [
@@ -219,33 +219,30 @@ export default function CostSimulator({ initialVariants = [] }: { initialVariant
           <span className="text-[#161616]/40"> · retail rates ~Apr 2026</span>
         </p>
       </label>
-      <label className="block text-sm">
-        <span className="text-secondary text-xs">
-          Driving: <span className="stat-num text-primary">{(kmPerYear / 1000).toFixed(0)}k km/yr</span>
-        </span>
-        <ChipPresets
-          options={[8000, 12000, 18000]}
-          value={kmPerYear}
-          onChange={setKmPerYear}
-          format={(v) => `${v / 1000}k km/yr`}
-        />
-        <input
-          type="range" min={5000} max={30000} step={1000} value={kmPerYear}
-          onChange={(e) => setKmPerYear(Number(e.target.value))}
-          className="w-full mt-3 accent-[#E8590C]"
-        />
-      </label>
-      <label className="block text-sm">
-        <span className="text-secondary text-xs">
-          Ownership: <span className="stat-num text-primary">{years} years</span>
-        </span>
-        <ChipPresets options={[3, 5, 7]} value={years} onChange={setYears} format={(v) => `${v} yr`} />
-        <input
-          type="range" min={3} max={8} step={1} value={years}
-          onChange={(e) => setYears(Number(e.target.value))}
-          className="w-full mt-3 accent-[#E8590C]"
-        />
-      </label>
+      <DriveRange
+        label="Driving"
+        value={kmPerYear}
+        onChange={setKmPerYear}
+        min={5000}
+        max={30000}
+        step={1000}
+        format={(v) => `${(v / 1000).toFixed(0)}k km/yr`}
+        presets={[8000, 12000, 18000]}
+        presetFormat={(v) => `${v / 1000}k km/yr`}
+        accentClass="accent-[#E8590C]"
+      />
+      <DriveRange
+        label="Ownership"
+        value={years}
+        onChange={setYears}
+        min={3}
+        max={8}
+        step={1}
+        format={(v) => `${v} years`}
+        presets={[3, 5, 7]}
+        presetFormat={(v) => `${v} yr`}
+        accentClass="accent-[#E8590C]"
+      />
     </>
   );
 

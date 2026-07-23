@@ -8,6 +8,7 @@ import {
   saveProfile,
 } from "@/lib/understanding/profile";
 import DriveSelect from "@/components/ui/DriveSelect";
+import DriveRange from "@/components/ui/DriveRange";
 
 export default function ProfileBar({
   profile,
@@ -51,34 +52,28 @@ export default function ProfileBar({
               className="w-full"
             />
           </label>
-          <label className="block">
-            <span className="text-xs text-secondary">
-              Annual km: {profile.annualKm.toLocaleString("en-IN")}
-            </span>
-            <input
-              type="range"
-              min={5000}
-              max={30000}
-              step={1000}
-              value={profile.annualKm}
-              onChange={(e) => update({ annualKm: Number(e.target.value) })}
-              className="mt-2 w-full"
-            />
-          </label>
-          <label className="block">
-            <span className="text-xs text-secondary">
-              Highway share: {Math.round(profile.highwayPct * 100)}%
-            </span>
-            <input
-              type="range"
-              min={0}
-              max={80}
-              step={5}
-              value={Math.round(profile.highwayPct * 100)}
-              onChange={(e) => update({ highwayPct: Number(e.target.value) / 100 })}
-              className="mt-2 w-full"
-            />
-          </label>
+          <DriveRange
+            label="Annual km"
+            value={profile.annualKm}
+            onChange={(annualKm) => update({ annualKm })}
+            min={5000}
+            max={30000}
+            step={1000}
+            format={(v) => v.toLocaleString("en-IN")}
+            presets={[8000, 12000, 18000]}
+            presetFormat={(v) => `${v / 1000}k`}
+          />
+          <DriveRange
+            label="Highway share"
+            value={Math.round(profile.highwayPct * 100)}
+            onChange={(pct) => update({ highwayPct: pct / 100 })}
+            min={0}
+            max={80}
+            step={5}
+            format={(v) => `${v}%`}
+            presets={[20, 40, 60]}
+            presetFormat={(v) => `${v}%`}
+          />
           <label className="flex items-center gap-3 min-h-[48px] cursor-pointer">
             <input
               type="checkbox"

@@ -7,6 +7,7 @@ import * as THREE from "three";
 import { getBrand, getModel, getVariant } from "@/lib/data";
 import { getSimCarColor } from "@/lib/simCarColors";
 import VariantSelect from "@/components/sims/VariantSelect";
+import DriveRange from "@/components/ui/DriveRange";
 import Stage from "../Stage";
 import StylizedCar, { type CarMotionRef } from "../StylizedCar";
 import EstimatedBadge from "@/components/EstimatedBadge";
@@ -224,24 +225,30 @@ export default function HillClimb3D({ initialVariant }: { initialVariant?: strin
             localStorage.setItem("drivescope_selected_variant", x);
           }
         }} />
-        <label className="block text-sm">
-          <span className="text-secondary text-xs flex justify-between mb-1">
-            <span>Incline</span><span className="font-mono">{incline}°</span>
-          </span>
-          <input type="range" min={5} max={30} step={5} value={incline}
-            onChange={(e) => { reset(); setIncline(Number(e.target.value)); }}
-            className="w-full accent-[#C84C31]" />
-          <div className="flex justify-between text-[10px] text-secondary mt-0.5"><span>5°</span><span>30°</span></div>
-        </label>
-        <label className="block text-sm">
-          <span className="text-secondary text-xs flex justify-between mb-1">
-            <span>Payload</span><span className="font-mono">{payload} kg</span>
-          </span>
-          <input type="range" min={0} max={400} step={50} value={payload}
-            onChange={(e) => { reset(); setPayload(Number(e.target.value)); }}
-            className="w-full accent-[#C84C31]" />
-          <div className="flex justify-between text-[10px] text-secondary mt-0.5"><span>0 kg</span><span>400 kg</span></div>
-        </label>
+        <DriveRange
+          label="Incline"
+          value={incline}
+          onChange={(v) => { reset(); setIncline(v); }}
+          min={5}
+          max={30}
+          step={5}
+          format={(v) => `${v}°`}
+          presets={[10, 15, 20]}
+          presetFormat={(v) => `${v}°`}
+          accentClass="accent-[#C84C31]"
+        />
+        <DriveRange
+          label="Payload"
+          value={payload}
+          onChange={(v) => { reset(); setPayload(v); }}
+          min={0}
+          max={400}
+          step={50}
+          format={(v) => `${v} kg`}
+          presets={[0, 150, 300]}
+          presetFormat={(v) => `${v}kg`}
+          accentClass="accent-[#C84C31]"
+        />
         <div className="flex gap-2">
           <button
             onClick={() => { if (state === "idle") setState("running"); else reset(); }}

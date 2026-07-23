@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { getBrand, getModel, getTestData, getVariant } from "@/lib/data";
+import { getModel, getTestData, getVariant } from "@/lib/data";
+import { getSimComparisonColor } from "@/lib/simCarColors";
 import { distanceAt, downloadCanvasPng, speedAt } from "@/lib/sim";
 import EstimatedBadge from "@/components/EstimatedBadge";
 import VariantSelect from "./VariantSelect";
@@ -12,13 +13,15 @@ import { CAR_IMAGE_MAP } from "@/lib/carImageMap";
 interface Racer {
   variantId: string;
   label: string;
+  shortLabel: string;
+  slot: number;
   color: string;
   t100: number;
   estimated: boolean;
   modelId: string;
 }
 
-function buildRacer(variantId: string): Racer | null {
+function buildRacer(variantId: string, slotIndex: number): Racer | null {
   const v = getVariant(variantId);
   if (!v) return null;
   const m = getModel(v.modelId)!;
@@ -27,7 +30,9 @@ function buildRacer(variantId: string): Racer | null {
   return {
     variantId,
     label: `${m.name} ${v.name}`,
-    color: getBrand(m.brandId)!.color,
+    shortLabel: v.name,
+    slot: slotIndex + 1,
+    color: getSimComparisonColor(slotIndex),
     t100: td.zeroTo100.value,
     estimated: td.zeroTo100.estimated,
     modelId: v.modelId,
@@ -50,7 +55,9 @@ export default function DragRace({ initialVariants }: { initialVariants: string[
 
   const [loadedImages, setLoadedImages] = useState<Record<string, HTMLImageElement | null>>({});
 
-  const racers = ids.filter(Boolean).map(buildRacer).filter((r): r is Racer => !!r);
+  const racers = ids
+    .map((id, slot) => (id ? buildRacer(id, slot) : null))
+    .filter((r): r is Racer => !!r);
 
   // Pre-load transparent car PNG images when selected ids change
   useEffect(() => {
@@ -114,7 +121,7 @@ export default function DragRace({ initialVariants }: { initialVariants: string[
 
         ctx.fillStyle = TEXT_PRIMARY;
         ctx.font = MONO_FONT;
-        ctx.fillText(r.label, 20, y + 18);
+        ctx.fillText(`Car ${r.slot} · ${r.shortLabel}`, 20, y + 18);
         ctx.fillStyle = speed >= 100 ? ACCENT : TEXT_SECONDARY;
         ctx.fillText(`${speed.toFixed(0)} km/h${r.estimated ? " ~" : ""}`, W - 90, y + 18);
         if (t >= r.t100) ctx.fillText(`${r.t100.toFixed(1)}s`, W - 90, y + 34);

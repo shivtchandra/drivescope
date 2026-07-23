@@ -5,6 +5,7 @@ import { AlertTriangle, ShieldAlert, Sparkles } from "lucide-react";
 import { getBrand, getModel, getVariant } from "@/lib/data";
 import { SCENE_COLORS } from "@/components/understanding/scenes/shared/sceneTokens";
 import VariantSelect from "./VariantSelect";
+import DriveRange from "@/components/ui/DriveRange";
 import { CAR_IMAGE_MAP } from "@/lib/carImageMap";
 
 export default function GroundClearance({ initialVariant }: { initialVariant?: string }) {
@@ -202,43 +203,31 @@ export default function GroundClearance({ initialVariant }: { initialVariant?: s
           }}
         />
         
-        <label className="block text-sm">
-          <span className="text-secondary text-xs flex justify-between mb-1">
-            <span>Obstacle Height</span>
-            <span className="text-primary font-mono">{breakerHeight} mm</span>
-          </span>
-          <input
-            type="range"
-            min={100}
-            max={200}
-            step={10}
-            value={breakerHeight}
-            onChange={(e) => {
-              setState("idle");
-              setBreakerHeight(Number(e.target.value));
-            }}
-            className="w-full accent-[#C84C31]"
-          />
-        </label>
+        <DriveRange
+          label="Obstacle Height"
+          value={breakerHeight}
+          onChange={(v) => { setState("idle"); setBreakerHeight(v); }}
+          min={100}
+          max={200}
+          step={10}
+          format={(v) => `${v} mm`}
+          presets={[120, 150, 180]}
+          presetFormat={(v) => `${v}mm`}
+          accentClass="accent-[#C84C31]"
+        />
 
-        <label className="block text-sm">
-          <span className="text-secondary text-xs flex justify-between mb-1">
-            <span>Payload (Cabin Weight)</span>
-            <span className="text-primary font-mono">{payload} kg</span>
-          </span>
-          <input
-            type="range"
-            min={0}
-            max={400}
-            step={50}
-            value={payload}
-            onChange={(e) => {
-              setState("idle");
-              setPayload(Number(e.target.value));
-            }}
-            className="w-full accent-[#C84C31]"
-          />
-        </label>
+        <DriveRange
+          label="Payload (Cabin Weight)"
+          value={payload}
+          onChange={(v) => { setState("idle"); setPayload(v); }}
+          min={0}
+          max={400}
+          step={50}
+          format={(v) => `${v} kg`}
+          presets={[0, 150, 300]}
+          presetFormat={(v) => `${v}kg`}
+          accentClass="accent-[#C84C31]"
+        />
 
         <div className="text-secondary text-xs font-mono">
           SUSPENSION COMPRESSION: <span className="text-warning font-semibold font-sans">-{suspensionCompression} mm</span>

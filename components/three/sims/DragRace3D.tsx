@@ -2,9 +2,10 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
+import { Html } from "@react-three/drei";
 import * as THREE from "three";
-import { getBrand, getModel, getTestData, getVariant } from "@/lib/data";
-import { getSimCarColor } from "@/lib/simCarColors";
+import { getModel, getTestData, getVariant } from "@/lib/data";
+import { getSimComparisonColor } from "@/lib/simCarColors";
 import { distanceAt, downloadCanvasPng, speedAt } from "@/lib/sim";
 import EstimatedBadge from "@/components/EstimatedBadge";
 import VariantSelect from "@/components/sims/VariantSelect";
@@ -19,7 +20,11 @@ interface Racer {
   variantId: string;
   modelId: string;
   label: string;
+  shortLabel: string;
+  slot: number;
   color: string;
+  fuel: string;
+  transmission: string;
   t100: number;
   estimated: boolean;
   wheelbaseMm: number;
@@ -28,7 +33,7 @@ interface Racer {
   dna: ReturnType<typeof getVehicleDNA>;
 }
 
-function buildRacer(variantId: string): Racer | null {
+function buildRacer(variantId: string, slotIndex: number): Racer | null {
   const v = getVariant(variantId);
   if (!v) return null;
   const m = getModel(v.modelId)!;
@@ -38,7 +43,11 @@ function buildRacer(variantId: string): Racer | null {
     variantId,
     modelId: m.id,
     label: `${m.name} ${v.name}`,
-    color: getSimCarColor(m.id, getBrand(m.brandId)!.color),
+    shortLabel: v.name,
+    slot: slotIndex + 1,
+    color: getSimComparisonColor(slotIndex),
+    fuel: v.fuel,
+    transmission: v.transmission,
     t100: td.zeroTo100.value,
     estimated: td.zeroTo100.estimated,
     wheelbaseMm: m.dimensions.wheelbaseMm,
@@ -128,6 +137,10 @@ function RaceScene({
             }}
             position={[0, 0, laneZ]}
           >
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-1.2, 0.007, 0]}>
+              <planeGeometry args={[1.5, 1.1]} />
+              <meshStandardMaterial color={r.color} emissive={r.color} emissiveIntensity={0.35} />
+            </mesh>
             <StylizedCar
               modelId={r.modelId}
               color={r.color}
@@ -137,6 +150,21 @@ function RaceScene({
               dna={r.dna}
               motionRef={motions.current[i]}
             />
+            <Html position={[0, 1.55, 0]} center distanceFactor={11}>
+              <div
+                className="pointer-events-none select-none whitespace-nowrap rounded-md border px-2 py-1 text-center font-mono shadow-[0_8px_24px_rgba(0,0,0,0.45)]"
+                style={{
+                  borderColor: `${r.color}99`,
+                  background: "rgba(9, 6, 13, 0.88)",
+                  color: "#F5F1E8",
+                }}
+              >
+                <div className="text-[9px] font-bold uppercase tracking-wider" style={{ color: r.color }}>
+                  Car {r.slot}
+                </div>
+                <div className="text-[10px] font-semibold">{r.shortLabel}</div>
+              </div>
+            </Html>
           </group>
         );
       })}
@@ -177,7 +205,10 @@ export default function DragRace3D({ initialVariants }: { initialVariants: strin
   slowMoRef.current = slowMo;
 
   const racers = useMemo(
-    () => ids.filter(Boolean).map(buildRacer).filter((r): r is Racer => !!r),
+    () =>
+      ids
+        .map((id, slot) => (id ? buildRacer(id, slot) : null))
+        .filter((r): r is Racer => !!r),
     [ids]
   );
   const sceneKey = racers.map((r) => r.variantId).join(",");
@@ -208,6 +239,31 @@ export default function DragRace3D({ initialVariants }: { initialVariants: strin
         ))}
       </div>
 
+      {racers.length > 0 && (
+        <div className="mb-4 flex flex-wrap gap-2">
+          {racers.map((r) => (
+            <div
+              key={r.variantId}
+              className="flex min-w-0 flex-1 items-center gap-2 rounded-xl border border-[#161616]/10 bg-[#F4F0E8]/90 px-3 py-2 text-xs sm:min-w-[200px] sm:flex-none"
+              style={{ boxShadow: `inset 3px 0 0 ${r.color}` }}
+            >
+              <span
+                className="shrink-0 rounded px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase text-white"
+                style={{ background: r.color }}
+              >
+                Car {r.slot}
+              </span>
+              <div className="min-w-0">
+                <p className="truncate font-semibold text-primary">{r.label}</p>
+                <p className="truncate font-mono text-[10px] text-secondary">
+                  {r.fuel.toUpperCase()} · {r.transmission}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
       <div className="relative">
         <div ref={containerRef} className="relative w-full aspect-[16/9] sm:aspect-[21/8] rounded-xl overflow-hidden">
           <Stage key={`${sceneKey}-${runId}`} camera={{ position: [6, 3.2, 11], fov: 42 }} fog={[24, 70]}>
@@ -224,20 +280,28 @@ export default function DragRace3D({ initialVariants }: { initialVariants: strin
           </Stage>
         </div>
 
-        <div className="sm:absolute relative sm:top-3 sm:left-4 top-auto left-auto mt-3 sm:mt-0 p-3 rounded-xl border border-[#161616]/10 bg-[#F4F0E8]/90 backdrop-blur-sm space-y-1.5 text-[10px] sm:text-xs stat-num pointer-events-none z-10 shadow-sm">
+        <div className="sm:absolute relative sm:top-3 sm:left-4 top-auto left-auto mt-3 sm:mt-0 p-3 rounded-xl border border-[#161616]/10 bg-[#F4F0E8]/95 backdrop-blur-sm space-y-2 text-[10px] sm:text-xs stat-num pointer-events-none z-10 shadow-sm max-w-[min(100%,18rem)]">
           {racers.map((r) => (
-            <div key={r.variantId} className="flex items-center gap-2 flex-wrap">
-              <span className="inline-block w-2.5 h-2.5 rounded-full shrink-0" style={{ background: r.color }} />
-              <span className="text-secondary">{r.label}</span>
+            <div key={r.variantId} className="flex items-start gap-2 border-l-[3px] pl-2" style={{ borderColor: r.color }}>
               <span
-                ref={(el) => {
-                  speedEls.current[r.variantId] = el;
-                }}
-                className="text-primary font-bold"
+                className="mt-0.5 inline-flex shrink-0 rounded px-1 py-0.5 font-mono text-[9px] font-bold uppercase text-white"
+                style={{ background: r.color }}
               >
-                0 km/h
+                Car {r.slot}
               </span>
-              {r.estimated && <span className="text-warning">~</span>}
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-semibold text-primary leading-tight">{r.shortLabel}</p>
+                <p className="truncate text-[9px] text-secondary">{r.fuel.toUpperCase()} · {r.transmission}</p>
+                <span
+                  ref={(el) => {
+                    speedEls.current[r.variantId] = el;
+                  }}
+                  className="text-primary font-bold"
+                >
+                  0 km/h
+                </span>
+                {r.estimated && <span className="text-warning"> ~</span>}
+              </div>
             </div>
           ))}
         </div>

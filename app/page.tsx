@@ -12,7 +12,7 @@ import MobileStickyCTA from "@/components/MobileStickyCTA";
 
 export default function Home() {
   return (
-    <div className="relative w-full pb-20 sm:pb-0 bg-[#F5F1E8] text-[#161616]">
+    <div className="relative w-full pb-safe sm:pb-0 bg-[#F5F1E8] text-[#161616]">
       {/* Giant Unified F1 Engineering Blueprint Backdrop */}
       <UnifiedCanvas />
 
@@ -28,7 +28,7 @@ export default function Home() {
 
         {/* CHAPTER 01 — WHAT MAKES A GOOD CAR? */}
         <SectionWrapper mood="lab">
-          <section className="py-28 relative">
+          <section className="py-16 sm:py-28 relative">
             <div className="mx-auto max-w-7xl px-6">
               <div className="mb-20 space-y-3">
                 <span className="font-mono text-[9px] tracking-[0.3em] text-[#C84C31] uppercase font-bold block">
@@ -57,7 +57,7 @@ export default function Home() {
 
       {/* CHAPTER 03 — COMPARE THOUGHTFULLY */}
       <SectionWrapper mood="comparison">
-        <section id="compare" className="py-28 relative">
+        <section id="compare" className="py-16 sm:py-28 relative">
           <div className="mx-auto max-w-7xl px-6 space-y-16">
             <div className="space-y-3">
               <span className="font-mono text-[9px] tracking-[0.3em] text-[#C84C31] uppercase font-bold block">
@@ -79,7 +79,7 @@ export default function Home() {
 
       {/* CHAPTER 04 — SIMULATE REALITY */}
       <SectionWrapper mood="financial">
-        <section id="simulator" className="py-28 relative">
+        <section id="simulator" className="py-16 sm:py-28 relative">
           <div className="mx-auto max-w-7xl px-6 space-y-16">
             <div className="text-center max-w-2xl mx-auto space-y-4">
               <span className="font-mono text-[9px] tracking-[0.3em] text-[#C84C31] uppercase font-bold block">

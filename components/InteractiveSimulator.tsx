@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from "react";
 import { Zap } from "lucide-react";
 import DriveSelect from "@/components/ui/DriveSelect";
+import DriveRange from "@/components/ui/DriveRange";
 import { costParams, formatCityFuelLabel } from "@/lib/data";
 
 export default function InteractiveSimulator() {
@@ -141,29 +142,22 @@ export default function InteractiveSimulator() {
 
           {/* STEP 1: Budget & City (Always visible on desktop, visible on Step 1 for mobile) */}
           <div className={`space-y-6 ${wizardStep !== 1 ? "hidden sm:block" : ""}`}>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-secondary font-medium">Vehicle Budget</span>
-                <span className="font-semibold stat-num text-primary">{formatCurrency(budget)}</span>
-              </div>
-              <input
-                type="range"
-                min={500000}
-                max={6000000}
-                step={50000}
-                value={budget}
-                onChange={(e) => {
-                  const b = Number(e.target.value);
-                  setBudget(b);
-                  if (downPayment > b) setDownPayment(b * 0.2);
-                }}
-                className="w-full accent-[#C84C31]"
-              />
-              <div className="flex justify-between text-[10px] text-secondary/60">
-                <span>₹5 Lakh</span>
-                <span>₹60 Lakh</span>
-              </div>
-            </div>
+            <DriveRange
+              label="Vehicle Budget"
+              value={budget}
+              onChange={(b) => {
+                setBudget(b);
+                if (downPayment > b) setDownPayment(b * 0.2);
+              }}
+              min={500000}
+              max={6000000}
+              step={50000}
+              mobileStep={100000}
+              format={formatCurrency}
+              presets={[1000000, 1500000, 2500000]}
+              presetFormat={(v) => `₹${(v / 100000).toFixed(0)}L`}
+              accentClass="accent-[#C84C31]"
+            />
 
             <div className="grid grid-cols-2 gap-4">
               <label className="block text-sm">
@@ -197,45 +191,32 @@ export default function InteractiveSimulator() {
 
           {/* STEP 2: Usage & Financing (Visible on desktop, visible on Step 2 for mobile) */}
           <div className={`space-y-6 ${wizardStep !== 2 ? "hidden sm:block" : ""}`}>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-secondary font-medium">Annual Driving Distance</span>
-                <span className="font-semibold stat-num text-primary">{(annualKm).toLocaleString("en-IN")} km/year</span>
-              </div>
-              <input
-                type="range"
-                min={5000}
-                max={35000}
-                step={1000}
-                value={annualKm}
-                onChange={(e) => setAnnualKm(Number(e.target.value))}
-                className="w-full accent-[#C84C31]"
-              />
-              <div className="flex justify-between text-[10px] text-secondary/60">
-                <span>5,000 km</span>
-                <span>35,000 km</span>
-              </div>
-            </div>
+            <DriveRange
+              label="Annual Driving Distance"
+              value={annualKm}
+              onChange={setAnnualKm}
+              min={5000}
+              max={35000}
+              step={1000}
+              format={(v) => `${v.toLocaleString("en-IN")} km/year`}
+              presets={[10000, 15000, 20000]}
+              presetFormat={(v) => `${(v / 1000).toFixed(0)}k`}
+              accentClass="accent-[#C84C31]"
+            />
 
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-secondary font-medium">Down Payment</span>
-                <span className="font-semibold stat-num text-primary">{formatCurrency(sanitizedDownPayment)}</span>
-              </div>
-              <input
-                type="range"
-                min={0}
-                max={budget - 100000}
-                step={25000}
-                value={sanitizedDownPayment}
-                onChange={(e) => setDownPayment(Number(e.target.value))}
-                className="w-full accent-[#C84C31]"
-              />
-              <div className="flex justify-between text-[10px] text-secondary/60">
-                <span>₹0 (Zero Down)</span>
-                <span>Max {formatCurrency(budget - 100000)}</span>
-              </div>
-            </div>
+            <DriveRange
+              label="Down Payment"
+              value={sanitizedDownPayment}
+              onChange={setDownPayment}
+              min={0}
+              max={budget - 100000}
+              step={25000}
+              mobileStep={50000}
+              format={formatCurrency}
+              presets={[0, Math.round(budget * 0.2), Math.round(budget * 0.3)]}
+              presetFormat={(v) => (v === 0 ? "₹0" : `₹${(v / 100000).toFixed(1)}L`)}
+              accentClass="accent-[#C84C31]"
+            />
           </div>
 
           {/* STEP 3: Tenure (Visible on desktop, visible on Step 3 for mobile) */}

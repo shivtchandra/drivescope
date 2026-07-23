@@ -7,6 +7,7 @@ import * as THREE from "three";
 import { getBrand, getModel, getVariant } from "@/lib/data";
 import { getSimCarColor } from "@/lib/simCarColors";
 import VariantSelect from "@/components/sims/VariantSelect";
+import DriveRange from "@/components/ui/DriveRange";
 import Stage from "../Stage";
 import StylizedCar from "../StylizedCar";
 import EstimatedBadge from "@/components/EstimatedBadge";
@@ -243,24 +244,30 @@ export default function GroundClearance3D({ initialVariant }: { initialVariant?:
             localStorage.setItem("drivescope_selected_variant", x);
           }
         }} />
-        <label className="block text-sm">
-          <span className="text-secondary text-xs flex justify-between mb-1">
-            <span>Obstacle Height</span><span className="font-mono">{bumpMm} mm</span>
-          </span>
-          <input type="range" min={80} max={200} step={10} value={bumpMm}
-            onChange={(e) => { reset(); setBumpMm(Number(e.target.value)); }}
-            className="w-full accent-[#C84C31]" />
-          <div className="flex justify-between text-[10px] text-secondary mt-0.5"><span>80mm</span><span>200mm</span></div>
-        </label>
-        <label className="block text-sm">
-          <span className="text-secondary text-xs flex justify-between mb-1">
-            <span>Payload</span><span className="font-mono">{payload} kg</span>
-          </span>
-          <input type="range" min={0} max={400} step={50} value={payload}
-            onChange={(e) => { reset(); setPayload(Number(e.target.value)); }}
-            className="w-full accent-[#C84C31]" />
-          <div className="flex justify-between text-[10px] text-secondary mt-0.5"><span>0</span><span>400kg</span></div>
-        </label>
+        <DriveRange
+          label="Obstacle Height"
+          value={bumpMm}
+          onChange={(v) => { reset(); setBumpMm(v); }}
+          min={80}
+          max={200}
+          step={10}
+          format={(v) => `${v} mm`}
+          presets={[120, 150, 180]}
+          presetFormat={(v) => `${v}mm`}
+          accentClass="accent-[#C84C31]"
+        />
+        <DriveRange
+          label="Payload"
+          value={payload}
+          onChange={(v) => { reset(); setPayload(v); }}
+          min={0}
+          max={400}
+          step={50}
+          format={(v) => `${v} kg`}
+          presets={[0, 150, 300]}
+          presetFormat={(v) => `${v}kg`}
+          accentClass="accent-[#C84C31]"
+        />
         <div className="space-y-1.5">
           <div className="text-xs font-mono text-secondary">
             Effective GC:{" "}

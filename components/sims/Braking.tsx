@@ -13,6 +13,7 @@ import {
 } from "@/lib/sim";
 import EstimatedBadge from "@/components/EstimatedBadge";
 import VariantSelect from "./VariantSelect";
+import DriveRange from "@/components/ui/DriveRange";
 import { ACCENT, CANVAS_BG, MONO_FONT, TEXT_PRIMARY, TEXT_SECONDARY, drawCarTop } from "./simCanvas";
 
 const CAR_LENGTH_M = 4.4;
@@ -144,14 +145,18 @@ export default function Braking({ initialVariant, initialComparison }: { initial
       <div className="grid gap-3 sm:grid-cols-3 mb-5">
         <VariantSelect label="Car" value={idA} onChange={(x) => { setIdA(x); setDone(false); }} />
         <VariantSelect label="Compare against (optional)" value={idB} allowNone onChange={(x) => { setIdB(x); setDone(false); }} />
-        <label className="block text-sm">
-          <span className="text-secondary text-xs">Speed: <span className="stat-num text-primary">{speed} km/h</span></span>
-          <input
-            type="range" min={60} max={100} step={20} value={speed}
-            onChange={(e) => { setSpeed(Number(e.target.value)); setDone(false); }}
-            className="w-full mt-3 accent-[#E8590C]"
-          />
-        </label>
+        <DriveRange
+          label="Speed"
+          value={speed}
+          onChange={(v) => { setSpeed(v); setDone(false); }}
+          min={60}
+          max={100}
+          step={20}
+          format={(v) => `${v} km/h`}
+          presets={[60, 80, 100]}
+          presetFormat={(v) => `${v}`}
+          accentClass="accent-[#E8590C]"
+        />
       </div>
 
       <canvas ref={canvasRef} width={840} height={240} className="w-full rounded-xl" />

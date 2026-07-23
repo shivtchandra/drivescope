@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Shield, Navigation, Eye, Wind, Snowflake, Sun, Video, Camera, AlertTriangle } from "lucide-react";
 import { SCENE_COLORS } from "@/components/understanding/scenes/shared/sceneTokens";
+import DriveRange from "@/components/ui/DriveRange";
 
 type PlaySubTab = "adas" | "sunroof" | "seats" | "camera";
 
@@ -389,33 +390,37 @@ function SunroofDemoView() {
       <div className="md:col-span-4 space-y-6">
         <h4 className="text-sm font-semibold tracking-tight text-[#161616] uppercase font-mono">Sunroof Configurator</h4>
         
-        <label className="block text-xs">
-          <span className="text-secondary block mb-1">Sunshade Rollout: {shadePct}% Open</span>
-          <input
-            type="range"
-            min={0}
-            max={100}
-            value={shadePct}
-            onChange={(e) => {
-              setShadePct(Number(e.target.value));
-              if (Number(e.target.value) < 100) setGlassPct(0);
-            }}
-            className="w-full accent-[#C84C31]"
-          />
-        </label>
+        <DriveRange
+          label={`Sunshade Rollout: ${shadePct}% Open`}
+          value={shadePct}
+          onChange={(v) => {
+            setShadePct(v);
+            if (v < 100) setGlassPct(0);
+          }}
+          min={0}
+          max={100}
+          step={5}
+          mobileStep={10}
+          format={(v) => `${v}%`}
+          presets={[0, 50, 100]}
+          presetFormat={(v) => `${v}%`}
+          accentClass="accent-[#C84C31]"
+        />
 
-        <label className="block text-xs">
-          <span className="text-secondary block mb-1">Glass Slide: {glassPct}% Open</span>
-          <input
-            type="range"
-            min={0}
-            max={100}
-            value={glassPct}
-            disabled={shadePct < 100}
-            onChange={(e) => setGlassPct(Number(e.target.value))}
-            className="w-full accent-[#C84C31] disabled:opacity-30"
-          />
-        </label>
+        <DriveRange
+          label={`Glass Slide: ${glassPct}% Open`}
+          value={glassPct}
+          onChange={setGlassPct}
+          min={0}
+          max={100}
+          step={5}
+          mobileStep={10}
+          format={(v) => `${v}%`}
+          presets={[0, 50, 100]}
+          presetFormat={(v) => `${v}%`}
+          disabled={shadePct < 100}
+          accentClass="accent-[#C84C31]"
+        />
 
         <div className="p-4 bg-[#ECE7DF] border border-[#161616]/10 rounded-xl text-[10px] text-[#161616]/70 leading-normal flex items-start gap-2">
           <AlertTriangle className="w-4 h-4 text-[#C84C31] shrink-0" />

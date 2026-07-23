@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { brands, models, variants, features } from "@/lib/data";
 import { Model, Variant, Feature, Fuel, Transmission } from "@/lib/types";
+import DriveRange from "@/components/ui/DriveRange";
 
 // Popular features subset for easy quick-access checkboxes
 const POPULAR_FEATURE_IDS = [
@@ -46,20 +47,21 @@ export default function ChatbotWidget() {
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
   const [featureSearchQuery, setFeatureSearchQuery] = useState("");
   const [selectedFuels, setSelectedFuels] = useState<Fuel[]>(["petrol", "diesel", "ev", "cng"]);
-  const [selectedTransmissions, setSelectedTransmissions] = useState<string[]>(["manual", "automatic"]);
+  const [selectedTransmissions, setSelectedTransmissions] = useState<string[]>([]);
   const [minBudgetLakh, setMinBudgetLakh] = useState<number>(5);
   const [maxBudgetLakh, setMaxBudgetLakh] = useState<number>(60);
   const [isCustomBudget, setIsCustomBudget] = useState(false);
   const [comparisonSelections, setComparisonSelections] = useState<string[]>([]);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   // Initialize conversation
   const startConversation = () => {
     setSelectedFeatures([]);
     setFeatureSearchQuery("");
     setSelectedFuels(["petrol", "diesel", "ev", "cng"]);
-    setSelectedTransmissions(["manual", "automatic"]);
+    setSelectedTransmissions([]);
     setMinBudgetLakh(5);
     setMaxBudgetLakh(60);
     setIsCustomBudget(false);
@@ -88,6 +90,54 @@ export default function ChatbotWidget() {
     if (isOpen && messages.length === 0) {
       startConversation();
     }
+  }, [isOpen]);
+
+  // Keep page scroll locked while the assistant is open (prevents bg scroll bleed on mobile).
+  useEffect(() => {
+    if (!isOpen) return undefined;
+
+    const scrollY = window.scrollY;
+    const { style } = document.body;
+    const htmlStyle = document.documentElement.style;
+    const prev = {
+      position: style.position,
+      top: style.top,
+      left: style.left,
+      right: style.right,
+      overflow: style.overflow,
+      width: style.width,
+      htmlOverflow: htmlStyle.overflow,
+    };
+
+    style.position = "fixed";
+    style.top = `-${scrollY}px`;
+    style.left = "0";
+    style.right = "0";
+    style.width = "100%";
+    style.overflow = "hidden";
+    htmlStyle.overflow = "hidden";
+    document.body.dataset.chatbotOpen = "true";
+
+    function blockBackgroundTouchMove(event: TouchEvent) {
+      const target = event.target as Node;
+      if (messagesContainerRef.current?.contains(target)) return;
+      event.preventDefault();
+    }
+
+    document.addEventListener("touchmove", blockBackgroundTouchMove, { passive: false });
+
+    return () => {
+      style.position = prev.position;
+      style.top = prev.top;
+      style.left = prev.left;
+      style.right = prev.right;
+      style.overflow = prev.overflow;
+      style.width = prev.width;
+      htmlStyle.overflow = prev.htmlOverflow;
+      delete document.body.dataset.chatbotOpen;
+      document.removeEventListener("touchmove", blockBackgroundTouchMove);
+      window.scrollTo(0, scrollY);
+    };
   }, [isOpen]);
 
   // Scroll to bottom whenever messages update
@@ -126,20 +176,20 @@ export default function ChatbotWidget() {
     setMessages(newMessages);
   };
 
-  // Handle Fuel Selection
   const toggleFuel = (fuel: Fuel) => {
     if (selectedFuels.includes(fuel)) {
-      if (selectedFuels.length > 1) {
-        setSelectedFuels(selectedFuels.filter((f) => f !== fuel));
-      }
+      setSelectedFuels(selectedFuels.filter((f) => f !== fuel));
     } else {
       setSelectedFuels([...selectedFuels, fuel]);
     }
   };
 
   const handleConfirmFuel = () => {
+    if (selectedFuels.length === 0) return;
+
     const fuelLabels = selectedFuels.map((f) => f.toUpperCase());
     const userMsgText = `Fuel Preference: ${fuelLabels.join(", ")}`;
+    setSelectedTransmissions([]);
 
     const newMessages: ChatMessage[] = [
       ...messages,
@@ -162,18 +212,13 @@ export default function ChatbotWidget() {
     setMessages(newMessages);
   };
 
-  // Handle Transmission Selection
-  const toggleTransmission = (type: string) => {
-    if (selectedTransmissions.includes(type)) {
-      if (selectedTransmissions.length > 1) {
-        setSelectedTransmissions(selectedTransmissions.filter((t) => t !== type));
-      }
-    } else {
-      setSelectedTransmissions([...selectedTransmissions, type]);
-    }
+  const selectTransmission = (type: string) => {
+    setSelectedTransmissions([type]);
   };
 
   const handleConfirmTransmission = () => {
+    if (selectedTransmissions.length === 0) return;
+
     const transLabels = selectedTransmissions.map((t) => t.charAt(0).toUpperCase() + t.slice(1));
     const userMsgText = `Gearbox Preference: ${transLabels.join(", ")}`;
 
@@ -365,7 +410,7 @@ export default function ChatbotWidget() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-[#C84C31] text-[#F5F1E8] shadow-2xl flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 group border border-[#161616]/10"
+          className="fixed max-sm:bottom-[var(--mobile-sticky-chrome)] bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-[#C84C31] text-[#F5F1E8] shadow-2xl flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 group border border-[#161616]/10"
           aria-label="Open DriveScope Assistant"
         >
           <MessageSquare className="h-6 w-6" />
@@ -383,11 +428,16 @@ export default function ChatbotWidget() {
 
       {/* Chat Window Panel */}
       {isOpen && (
+        <>
+          <div
+            className="fixed inset-0 z-40 bg-[#161616]/25 touch-none"
+            aria-hidden
+          />
         <div
           className={`fixed z-50 border border-[#161616]/10 flex flex-col overflow-hidden shadow-2xl transition-all duration-300 ${
             isFullScreen
-              ? "inset-0 w-screen h-screen rounded-none"
-              : "bottom-6 right-6 w-[380px] h-[580px] max-h-[85vh] max-w-[calc(100vw-2rem)] rounded-2xl"
+              ? "inset-0 w-screen h-[100dvh] rounded-none"
+              : "bottom-6 right-6 w-[380px] h-[580px] max-h-[85dvh] max-w-[calc(100vw-2rem)] rounded-2xl max-sm:inset-x-3 max-sm:bottom-3 max-sm:right-auto max-sm:left-auto max-sm:w-auto max-sm:h-[min(580px,calc(100dvh-1.5rem))] max-sm:max-h-[calc(100dvh-1.5rem)]"
           }`}
           style={{
             background: "rgba(245, 241, 232, 0.98)",
@@ -396,7 +446,7 @@ export default function ChatbotWidget() {
           }}
         >
           {/* Panel Header */}
-          <div className="px-4 py-3 bg-[#F5F1E8] border-b border-[#161616]/10 flex items-center justify-between">
+          <div className="shrink-0 px-4 py-3 bg-[#F5F1E8] border-b border-[#161616]/10 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
               <div>
@@ -435,7 +485,10 @@ export default function ChatbotWidget() {
           </div>
 
           {/* Messages Container */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 font-sans text-sm">
+          <div
+            ref={messagesContainerRef}
+            className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-4 space-y-4 font-sans text-sm [-webkit-overflow-scrolling:touch] touch-pan-y"
+          >
             {messages.map((msg, index) => {
               const isBot = msg.sender === "bot";
               return (
@@ -505,7 +558,7 @@ export default function ChatbotWidget() {
 
                         {/* Search Results */}
                         {filteredSearchFeatures.length > 0 && (
-                          <div className="bg-[#F5F1E8] border border-[#161616]/10 rounded-lg p-1.5 space-y-1 shadow-sm max-h-32 overflow-y-auto">
+                          <div className="bg-[#F5F1E8] border border-[#161616]/10 rounded-lg p-1.5 space-y-1 shadow-sm max-h-32 overflow-y-auto overscroll-contain">
                             {filteredSearchFeatures.map((feat) => {
                               const selected = selectedFeatures.includes(feat.id);
                               return (
@@ -569,7 +622,8 @@ export default function ChatbotWidget() {
 
                       <button
                         onClick={handleConfirmFuel}
-                        className="w-full py-2.5 rounded-lg bg-[#C84C31] text-[#F5F1E8] text-xs font-mono font-bold hover:opacity-90 transition cursor-pointer flex items-center justify-center gap-1"
+                        disabled={selectedFuels.length === 0}
+                        className="w-full py-2.5 rounded-lg bg-[#C84C31] text-[#F5F1E8] text-xs font-mono font-bold hover:opacity-90 transition cursor-pointer flex items-center justify-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed"
                       >
                         Confirm Fuel Selection
                         <ChevronRight className="h-3.5 w-3.5" />
@@ -582,6 +636,9 @@ export default function ChatbotWidget() {
                       <p className="font-mono text-[10px] tracking-wide text-[#161616]/70 uppercase font-bold">
                         Select Gearbox Type:
                       </p>
+                      <p className="text-[10px] text-[#161616]/55 font-mono">
+                        Pick one — tap the other option to switch.
+                      </p>
 
                       <div className="grid grid-cols-2 gap-2">
                         {["manual", "automatic"].map((type) => {
@@ -589,17 +646,18 @@ export default function ChatbotWidget() {
                           return (
                             <button
                               key={type}
-                              onClick={() => toggleTransmission(type)}
+                              type="button"
+                              onClick={() => selectTransmission(type)}
                               className={`flex items-center gap-2 p-2 rounded-lg border text-left text-xs font-mono transition cursor-pointer ${
                                 selected
                                   ? "bg-[#C84C31] text-[#F5F1E8] border-[#C84C31]"
                                   : "bg-[#F5F1E8] text-[#161616] border-[#161616]/10 hover:border-[#161616]/30"
                               }`}
                             >
-                              <div className={`h-3.5 w-3.5 rounded border flex items-center justify-center flex-shrink-0 ${
+                              <div className={`h-3.5 w-3.5 rounded-full border flex items-center justify-center flex-shrink-0 ${
                                 selected ? "border-[#F5F1E8]" : "border-[#161616]/20 bg-[#F5F1E8]"
                               }`}>
-                                {selected && <Check className="h-2.5 w-2.5" />}
+                                {selected && <div className="h-1.5 w-1.5 rounded-full bg-[#F5F1E8]" />}
                               </div>
                               <span className="capitalize">{type}</span>
                             </button>
@@ -609,7 +667,8 @@ export default function ChatbotWidget() {
 
                       <button
                         onClick={handleConfirmTransmission}
-                        className="w-full py-2.5 rounded-lg bg-[#C84C31] text-[#F5F1E8] text-xs font-mono font-bold hover:opacity-90 transition cursor-pointer flex items-center justify-center gap-1"
+                        disabled={selectedTransmissions.length === 0}
+                        className="w-full py-2.5 rounded-lg bg-[#C84C31] text-[#F5F1E8] text-xs font-mono font-bold hover:opacity-90 transition cursor-pointer flex items-center justify-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed"
                       >
                         Confirm Gearbox Selection
                         <ChevronRight className="h-3.5 w-3.5" />
@@ -663,35 +722,31 @@ export default function ChatbotWidget() {
                       ) : (
                         <div className="space-y-4">
                           <div className="space-y-3">
-                            <div className="space-y-1">
-                              <div className="flex justify-between font-mono text-xs text-[#161616]">
-                                <span>Min Budget:</span>
-                                <span className="font-bold">₹{minBudgetLakh} Lakh</span>
-                              </div>
-                              <input
-                                type="range"
-                                min="3"
-                                max="100"
-                                value={minBudgetLakh}
-                                onChange={(e) => setMinBudgetLakh(Number(e.target.value))}
-                                className="w-full accent-[#C84C31]"
-                              />
-                            </div>
+                            <DriveRange
+                              label="Min Budget"
+                              value={minBudgetLakh}
+                              onChange={setMinBudgetLakh}
+                              min={3}
+                              max={100}
+                              step={1}
+                              format={(v) => `₹${v} Lakh`}
+                              presets={[5, 10, 20]}
+                              presetFormat={(v) => `₹${v}L`}
+                              accentClass="accent-[#C84C31]"
+                            />
 
-                            <div className="space-y-1">
-                              <div className="flex justify-between font-mono text-xs text-[#161616]">
-                                <span>Max Budget:</span>
-                                <span className="font-bold">₹{maxBudgetLakh} Lakh</span>
-                              </div>
-                              <input
-                                type="range"
-                                min="5"
-                                max="200"
-                                value={maxBudgetLakh}
-                                onChange={(e) => setMaxBudgetLakh(Number(e.target.value))}
-                                className="w-full accent-[#C84C31]"
-                              />
-                            </div>
+                            <DriveRange
+                              label="Max Budget"
+                              value={maxBudgetLakh}
+                              onChange={setMaxBudgetLakh}
+                              min={5}
+                              max={200}
+                              step={1}
+                              format={(v) => `₹${v} Lakh`}
+                              presets={[15, 30, 50]}
+                              presetFormat={(v) => `₹${v}L`}
+                              accentClass="accent-[#C84C31]"
+                            />
                           </div>
 
                           <div className="flex gap-2">
@@ -879,7 +934,7 @@ export default function ChatbotWidget() {
           </div>
 
           {/* Reset / Status bar */}
-          <div className="p-3 bg-[#ECE7DF] border-t border-[#161616]/10 flex items-center justify-between text-xs font-mono text-[#161616]/65">
+          <div className="shrink-0 p-3 bg-[#ECE7DF] border-t border-[#161616]/10 flex items-center justify-between text-xs font-mono text-[#161616]/65">
             <button
               onClick={startConversation}
               className="flex items-center gap-1 hover:text-[#C84C31] transition cursor-pointer"
@@ -890,6 +945,7 @@ export default function ChatbotWidget() {
             <span>Ask questions above</span>
           </div>
         </div>
+        </>
       )}
     </>
   );

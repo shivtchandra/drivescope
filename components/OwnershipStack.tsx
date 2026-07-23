@@ -7,6 +7,7 @@ import { computeCost } from "@/lib/cost";
 import EstimatedBadge from "./EstimatedBadge";
 import VariantSelect from "./sims/VariantSelect";
 import DriveSelect from "@/components/ui/DriveSelect";
+import DriveRange from "@/components/ui/DriveRange";
 import { TrendingDown, Wrench, Disc, IndianRupee, Fuel, Shield, TrendingUp } from "lucide-react";
 
 const CARDS = [
@@ -374,35 +375,30 @@ export default function OwnershipStack() {
             />
           </label>
 
-          <label className="block text-sm">
-            <span className="text-secondary/70 text-xs block mb-1 font-geist uppercase tracking-wider">
-              Driving: <span className="stat-num text-[#2563EB] font-bold">{(kmPerYear / 1000).toFixed(0)}k km/yr</span>
-            </span>
-            <input
-              type="range"
-              min={5000}
-              max={30000}
-              step={1000}
-              value={kmPerYear}
-              onChange={(e) => setKmPerYear(Number(e.target.value))}
-              className="w-full mt-3 accent-[#2563EB]"
-            />
-          </label>
-
-          <label className="block text-sm">
-            <span className="text-secondary/70 text-xs block mb-1 font-geist uppercase tracking-wider">
-              Ownership: <span className="stat-num text-[#2563EB] font-bold">{years} years</span>
-            </span>
-            <input
-              type="range"
-              min={3}
-              max={8}
-              step={1}
-              value={years}
-              onChange={(e) => setYears(Number(e.target.value))}
-              className="w-full mt-3 accent-[#2563EB]"
-            />
-          </label>
+          <DriveRange
+            label="Driving"
+            value={kmPerYear}
+            onChange={setKmPerYear}
+            min={5000}
+            max={30000}
+            step={1000}
+            format={(v) => `${(v / 1000).toFixed(0)}k km/yr`}
+            presets={[8000, 12000, 18000]}
+            presetFormat={(v) => `${v / 1000}k km/yr`}
+            accentClass="accent-[#2563EB]"
+          />
+          <DriveRange
+            label="Ownership"
+            value={years}
+            onChange={setYears}
+            min={3}
+            max={8}
+            step={1}
+            format={(v) => `${v} years`}
+            presets={[3, 5, 7]}
+            presetFormat={(v) => `${v} yr`}
+            accentClass="accent-[#2563EB]"
+          />
         </div>
 
         {/* Hero outputs cards */}

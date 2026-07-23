@@ -60,3 +60,10 @@ export const SIM_MODEL_COLORS: Record<string, string> = {
 export function getSimCarColor(modelId: string, brandFallback?: string): string {
   return SIM_MODEL_COLORS[modelId] ?? brandFallback ?? "#888888";
 }
+
+/** High-contrast colours for Car 1 / Car 2 / Car 3 in multi-car sims (same model safe). */
+export const SIM_COMPARISON_COLORS = ["#C84C31", "#35D6FF", "#4ADE80"] as const;
+
+export function getSimComparisonColor(slotIndex: number): string {
+  return SIM_COMPARISON_COLORS[slotIndex % SIM_COMPARISON_COLORS.length];
+}

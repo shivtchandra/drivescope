@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { TriangleAlert, RotateCcw, ShieldCheck } from "lucide-react";
 import { getBrand, getModel, getTestData, getVariant } from "@/lib/data";
 import VariantSelect from "./VariantSelect";
+import DriveRange from "@/components/ui/DriveRange";
 
 type Surface = "dry" | "wet";
 
@@ -105,21 +106,19 @@ export default function EmergencySwerve({ initialVariant }: { initialVariant?: s
             ))}
           </div>
         </div>
-        <label className="block text-sm">
-          <span className="text-secondary text-xs flex justify-between mb-1">
-            <span>Approach speed</span>
-            <span className="text-primary font-mono">{approach} km/h</span>
-          </span>
-          <input
-            type="range"
-            min={40}
-            max={130}
-            step={5}
-            value={approach}
-            onChange={(e) => setApproach(Number(e.target.value))}
-            className="w-full accent-[#C84C31]"
-          />
-        </label>
+        <DriveRange
+          label="Approach speed"
+          value={approach}
+          onChange={setApproach}
+          min={40}
+          max={130}
+          step={5}
+          mobileStep={10}
+          format={(v) => `${v} km/h`}
+          presets={[60, 80, 100]}
+          presetFormat={(v) => `${v}`}
+          accentClass="accent-[#C84C31]"
+        />
         <div
           className={`text-xs font-mono rounded-xl border px-3 py-2.5 flex items-center gap-2 ${
             hasEsc ? "border-[#2d6a4f]/40 text-[#2d6a4f]" : "border-[#d97706]/40 text-[#d97706]"

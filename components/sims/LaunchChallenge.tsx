@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Zap, Timer, Gauge } from "lucide-react";
-import { getBrand, getModel, getTestData, getVariant, formatLakh } from "@/lib/data";
+import { getModel, getTestData, getVariant, formatLakh } from "@/lib/data";
+import { getSimComparisonColor } from "@/lib/simCarColors";
 import { distanceAt, downloadCanvasPng, speedAt, KMH_TO_MS } from "@/lib/sim";
 import EstimatedBadge from "@/components/EstimatedBadge";
 import VariantSelect from "./VariantSelect";
@@ -12,6 +13,8 @@ import { SCENE_COLORS } from "@/components/understanding/scenes/shared/sceneToke
 interface Racer {
   variantId: string;
   label: string;
+  shortLabel: string;
+  slot: number;
   color: string;
   t100: number;
   estimated: boolean;
@@ -23,7 +26,7 @@ interface Racer {
   engineType: string;
 }
 
-function buildRacer(variantId: string): Racer | null {
+function buildRacer(variantId: string, slotIndex: number): Racer | null {
   const v = getVariant(variantId);
   if (!v) return null;
   const m = getModel(v.modelId)!;
@@ -33,7 +36,9 @@ function buildRacer(variantId: string): Racer | null {
   return {
     variantId,
     label: `${m.name} ${v.name}`,
-    color: getBrand(m.brandId)!.color,
+    shortLabel: v.name,
+    slot: slotIndex + 1,
+    color: getSimComparisonColor(slotIndex),
     t100,
     estimated: td?.zeroTo100.estimated ?? true,
     modelId: v.modelId,
@@ -71,7 +76,9 @@ export default function LaunchChallenge({ initialVariants }: { initialVariants: 
   
   const stateRef = useRef({ t: 0, last: 0, raf: 0 });
   const shakeRef = useRef({ x: 0, y: 0, intensity: 0 });
-  const racers = ids.filter(Boolean).map(buildRacer).filter((r): r is Racer => !!r);
+  const racers = ids
+    .map((id, slot) => (id ? buildRacer(id, slot) : null))
+    .filter((r): r is Racer => !!r);
 
   // Pre-load images
   useEffect(() => {
@@ -357,6 +364,12 @@ export default function LaunchChallenge({ initialVariants }: { initialVariants: 
                 </g>
 
                 {/* HUD speed indicators floating near cars */}
+                <g transform={`translate(${carX - 8}, ${carY - 18})`} opacity={0.95}>
+                  <rect x={-2} y={-10} width={88} height={12} rx={3} fill={r.color} />
+                  <text fill="#fff" fontSize={7} fontFamily="monospace" fontWeight="bold" x={2} y={-1}>
+                    CAR {r.slot}
+                  </text>
+                </g>
                 <g transform={`translate(${carX + 50}, ${carY + 4})`} opacity={0.85}>
                   <text fill="#F7F7F5" fontSize={8} fontFamily="monospace" fontWeight="bold">
                     {currentSpeed.toFixed(0)} km/h
@@ -412,7 +425,9 @@ export default function LaunchChallenge({ initialVariants }: { initialVariants: 
                 {resultsData.map((r, i) => (
                   <div key={r.racer.variantId} className="flex justify-between items-center border-b border-black/[0.06] pb-2">
                     <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full" style={{ background: r.racer.color }} />
+                      <span className="rounded px-1 py-0.5 font-mono text-[8px] font-bold uppercase text-white" style={{ background: r.racer.color }}>
+                        Car {r.racer.slot}
+                      </span>
                       <span className="text-xs font-medium">{r.racer.label}</span>
                     </div>
                     <div className="text-right">

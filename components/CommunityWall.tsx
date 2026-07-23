@@ -381,7 +381,7 @@ export default function CommunityWall({ models }: { models: ModelOption[] }) {
             </span>
             <h1 className="mt-2 font-display text-4xl leading-none sm:text-6xl">The wall is alive.</h1>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed sm:text-base" style={{ color: "#4b4b4b" }}>
-              Owner notes drift, lift, and settle like paper in a garage draft. Tap the plus to pin your own car experience.
+              Real owner notes pinned to the board. Tap the plus to add your own car experience.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2 rounded-lg border border-[#161616]/10 bg-[#ECE7DF]/78 p-2 shadow-[0_16px_40px_rgba(22,22,22,0.07)] backdrop-blur-md">
@@ -443,10 +443,9 @@ export default function CommunityWall({ models }: { models: ModelOption[] }) {
 
                 return (
                   <div key={post.id}
-                    className={`wall-note-breeze inline-block w-full break-inside-avoid will-change-transform ${wallDensity.wrapper}`}
-                    style={{ animationDelay: `${(index % 7) * -1.3}s`, animationDuration: `${7 + (index % 5) * 1.1}s` }}>
+                    className={`inline-block w-full break-inside-avoid ${wallDensity.wrapper}`}>
                     <article
-                      className={`relative transform-gpu shadow-[0_18px_34px_rgba(22,22,22,0.2)] transition duration-200 hover:-translate-y-1 hover:rotate-0 ${wallDensity.note} ${style.rotate}`}
+                      className={`relative shadow-[0_18px_34px_rgba(22,22,22,0.2)] transition-[box-shadow,border-color] duration-200 hover:shadow-[0_22px_40px_rgba(22,22,22,0.24)] ${wallDensity.note} ${style.rotate}`}
                       style={{ backgroundColor: style.bg }}>
                       <div className={`absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rotate-1 border border-[#161616]/10 opacity-80 shadow-sm ${wallDensity.tape}`}
                         style={{ backgroundColor: style.tape }} />

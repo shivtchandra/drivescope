@@ -6,7 +6,7 @@ import EvVsPetrolCalculator from "./EvVsPetrolCalculator";
 
 export default function SimulationBay() {
   return (
-    <div className="space-y-16 text-[#161616]">
+    <div className="space-y-16 text-[#161616] pb-safe">
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         <svg className="w-full h-full opacity-[0.02]" viewBox="0 0 1440 400" preserveAspectRatio="xMidYMid slice">
           {Array.from({ length: 12 }).map((_, i) => (

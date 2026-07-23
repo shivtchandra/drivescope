@@ -5,6 +5,7 @@ import { Compass, Gauge, TrendingUp } from "lucide-react";
 import { getBrand, getModel, getTestData, getVariant } from "@/lib/data";
 import { SCENE_COLORS } from "@/components/understanding/scenes/shared/sceneTokens";
 import VariantSelect from "./VariantSelect";
+import DriveRange from "@/components/ui/DriveRange";
 import { CAR_IMAGE_MAP } from "@/lib/carImageMap";
 
 export default function HillClimb({ initialVariant }: { initialVariant?: string }) {
@@ -194,43 +195,32 @@ export default function HillClimb({ initialVariant }: { initialVariant?: string 
           }}
         />
         
-        <label className="block text-sm">
-          <span className="text-secondary text-xs flex justify-between mb-1">
-            <span>Incline Angle</span>
-            <span className="text-primary font-mono">{incline}°</span>
-          </span>
-          <input
-            type="range"
-            min={10}
-            max={22}
-            step={1}
-            value={incline}
-            onChange={(e) => {
-              setState("idle");
-              setIncline(Number(e.target.value));
-            }}
-            className="w-full accent-[#C84C31]"
-          />
-        </label>
+        <DriveRange
+          label="Incline Angle"
+          value={incline}
+          onChange={(v) => { setState("idle"); setIncline(v); }}
+          min={10}
+          max={22}
+          step={1}
+          format={(v) => `${v}°`}
+          presets={[12, 15, 20]}
+          presetFormat={(v) => `${v}°`}
+          accentClass="accent-[#C84C31]"
+        />
 
-        <label className="block text-sm">
-          <span className="text-secondary text-xs flex justify-between mb-1">
-            <span>Cabin Payload (Load)</span>
-            <span className="text-primary font-mono">{payload} kg</span>
-          </span>
-          <input
-            type="range"
-            min={75}
-            max={450}
-            step={25}
-            value={payload}
-            onChange={(e) => {
-              setState("idle");
-              setPayload(Number(e.target.value));
-            }}
-            className="w-full accent-[#C84C31]"
-          />
-        </label>
+        <DriveRange
+          label="Cabin Payload (Load)"
+          value={payload}
+          onChange={(v) => { setState("idle"); setPayload(v); }}
+          min={75}
+          max={450}
+          step={25}
+          mobileStep={50}
+          format={(v) => `${v} kg`}
+          presets={[100, 200, 350]}
+          presetFormat={(v) => `${v}kg`}
+          accentClass="accent-[#C84C31]"
+        />
 
         <div className="text-[#9CA3AF] text-xs font-mono">
           WEIGHT EST: <span className="text-[#C84C31] font-semibold font-sans">{totalWeight} kg</span>

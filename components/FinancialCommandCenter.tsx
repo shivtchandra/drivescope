@@ -7,8 +7,8 @@ import { computeCost } from "@/lib/cost";
 import EstimatedBadge from "./EstimatedBadge";
 import VariantSelect from "./sims/VariantSelect";
 import DriveSelect from "@/components/ui/DriveSelect";
+import DriveRange from "@/components/ui/DriveRange";
 import MobileResultsBar from "@/components/mobile/MobileResultsBar";
-import ChipPresets from "@/components/mobile/ChipPresets";
 import { usePersistedPageState } from "@/lib/use-persisted-page-state";
 
 const SERIES = [
@@ -79,20 +79,30 @@ export default function FinancialCommandCenter() {
           className="w-full mt-2"
         />
       </label>
-      <label className="block text-sm">
-        <span className="text-[#161616]/65 text-xs block mb-1 uppercase tracking-wider">
-          Driving: <span className="text-[#C74B32] font-bold">{(kmPerYear / 1000).toFixed(0)}k km/yr</span>
-        </span>
-        <ChipPresets options={[8000, 12000, 18000]} value={kmPerYear} onChange={setKmPerYear} format={(v) => `${v / 1000}k km/yr`} />
-        <input type="range" min={5000} max={30000} step={1000} value={kmPerYear} onChange={(e) => setKmPerYear(Number(e.target.value))} className="w-full mt-2 accent-[#C74B32]" />
-      </label>
-      <label className="block text-sm">
-        <span className="text-[#161616]/65 text-xs block mb-1 uppercase tracking-wider">
-          Ownership: <span className="text-[#C74B32] font-bold">{years} years</span>
-        </span>
-        <ChipPresets options={[3, 5, 7]} value={years} onChange={setYears} format={(v) => `${v} yr`} />
-        <input type="range" min={3} max={8} step={1} value={years} onChange={(e) => setYears(Number(e.target.value))} className="w-full mt-2 accent-[#C74B32]" />
-      </label>
+      <DriveRange
+        label="Driving"
+        value={kmPerYear}
+        onChange={setKmPerYear}
+        min={5000}
+        max={30000}
+        step={1000}
+        format={(v) => `${(v / 1000).toFixed(0)}k km/yr`}
+        presets={[8000, 12000, 18000]}
+        presetFormat={(v) => `${v / 1000}k km/yr`}
+        accentClass="accent-[#C74B32]"
+      />
+      <DriveRange
+        label="Ownership"
+        value={years}
+        onChange={setYears}
+        min={3}
+        max={8}
+        step={1}
+        format={(v) => `${v} years`}
+        presets={[3, 5, 7]}
+        presetFormat={(v) => `${v} yr`}
+        accentClass="accent-[#C74B32]"
+      />
     </>
   );
 

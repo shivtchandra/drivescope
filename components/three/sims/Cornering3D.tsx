@@ -8,6 +8,7 @@ import { getBrand, getModel, getTestData, getVariant } from "@/lib/data";
 import { getSimCarColor } from "@/lib/simCarColors";
 import { cornerSpeedCapKmh } from "@/lib/race/grip";
 import VariantSelect from "@/components/sims/VariantSelect";
+import DriveRange from "@/components/ui/DriveRange";
 import Stage from "../Stage";
 import StylizedCar, { type CarMotionRef } from "../StylizedCar";
 import { getVehicleDNA } from "@/lib/vehicle-dna";
@@ -702,24 +703,28 @@ export default function Cornering3D({ initialVariant }: { initialVariant?: strin
           </div>
         </div>
 
-        <label className="block text-sm">
-          <span className="text-secondary text-xs flex justify-between mb-1">
-            <span>Entry speed</span>
-            <span className="text-primary font-mono">{entrySpeed} km/h</span>
-          </span>
-          <input
-            type="range" min={20} max={140} step={5} value={entrySpeed}
-            onChange={(e) => { reset(); setEntrySpeed(Number(e.target.value)); }}
-            className="w-full accent-[#C84C31]"
+        <div className="block text-sm space-y-1">
+          <DriveRange
+            label="Entry speed"
+            value={entrySpeed}
+            onChange={(v) => { reset(); setEntrySpeed(v); }}
+            min={20}
+            max={140}
+            step={5}
+            mobileStep={10}
+            format={(v) => `${v} km/h`}
+            presets={[40, 80, 120]}
+            presetFormat={(v) => `${v}`}
+            accentClass="accent-[#C84C31]"
           />
-          <div className="flex justify-between text-[10px] text-secondary mt-0.5">
+          <div className="flex justify-between text-[10px] text-secondary">
             <span>20</span>
             <span className={ratio > 1 ? "text-[#d97706] font-semibold" : "text-secondary"}>
               SAFE: {maxSpd.toFixed(0)} km/h
             </span>
             <span>140</span>
           </div>
-        </label>
+        </div>
       </div>
 
       {/* 3D Canvas */}
